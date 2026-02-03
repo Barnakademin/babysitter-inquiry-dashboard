@@ -216,6 +216,16 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                           <div className="flex items-center gap-2 text-sm">
                             <MapPin className="w-4 h-4 text-muted-foreground" />
                             <span>{inquiry.address}, {inquiry.city}</span>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(`${inquiry.address}, ${inquiry.city}`);
+                                toast.success("Address copied to clipboard");
+                              }}
+                              className="p-1 rounded hover:bg-muted transition-colors"
+                              title="Copy address"
+                            >
+                              <Copy className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                            </button>
                           </div>
                         </div>
                         {inquiry.comment && (
