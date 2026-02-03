@@ -81,9 +81,9 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                 <Users className="w-4 h-4" />
               </SortableHeader>
               <SortableHeader columnKey="formLanguage" sortConfig={sortConfig} onSort={onSort}>Form</SortableHeader>
-              <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
               <TableHead>Promo</TableHead>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
+              <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -143,11 +143,6 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                     <FormLanguageFlag language={inquiry.formLanguage} />
                   </TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary font-semibold text-sm">
-                      {inquiry.stage}
-                    </span>
-                  </TableCell>
-                  <TableCell>
                     <PromoBadge code={inquiry.promoCode} />
                   </TableCell>
                   <TableCell>
@@ -155,6 +150,11 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       <div className="font-medium">{format(inquiry.createdAt, "MMM d, yyyy")}</div>
                       <div className="text-muted-foreground text-xs">{format(inquiry.createdAt, "h:mm a")}</div>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary font-semibold text-sm">
+                      {inquiry.stage}
+                    </span>
                   </TableCell>
                 </TableRow>
                 {expandedRow === inquiry.id && (
