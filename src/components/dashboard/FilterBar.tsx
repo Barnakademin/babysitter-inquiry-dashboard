@@ -25,11 +25,11 @@ const serviceLabels: Record<string, string> = {
 };
 
 const languageLabels: Record<string, string> = {
-  sv: "🇸🇪 Swedish",
-  en: "🇬🇧 English",
-  de: "🇩🇪 German",
-  fr: "🇫🇷 French",
-  es: "🇪🇸 Spanish",
+  sv: "Swedish",
+  en: "English",
+  de: "German",
+  fr: "French",
+  es: "Spanish",
 };
 
 export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBarProps) {
