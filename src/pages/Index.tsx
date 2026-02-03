@@ -1,11 +1,143 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useMemo } from "react";
+import { mockInquiries, ClientInquiry } from "@/data/mockInquiries";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { SearchBar } from "@/components/dashboard/SearchBar";
+import { FilterBar } from "@/components/dashboard/FilterBar";
+import { InquiryTable } from "@/components/dashboard/InquiryTable";
+import { Pagination } from "@/components/dashboard/Pagination";
+
+const ITEMS_PER_PAGE = 10;
+
+type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({
+    city: "",
+    service: "",
+    formLanguage: "",
+  });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "createdAt", direction: "desc" });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setFilters({ city: "", service: "", formLanguage: "" });
+    setCurrentPage(1);
+  };
+
+  const handleSort = (key: string) => {
+    setSortConfig((prev) => {
+      if (prev?.key === key) {
+        return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
+      }
+      return { key, direction: "asc" };
+    });
+  };
+
+  const filteredAndSortedData = useMemo(() => {
+    let result = [...mockInquiries];
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (inquiry) =>
+          inquiry.name.toLowerCase().includes(query) ||
+          inquiry.email.toLowerCase().includes(query) ||
+          inquiry.city.toLowerCase().includes(query) ||
+          inquiry.id.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply filters
+    if (filters.city) {
+      result = result.filter((inquiry) => inquiry.city === filters.city);
+    }
+    if (filters.service) {
+      result = result.filter((inquiry) => inquiry.service === filters.service);
+    }
+    if (filters.formLanguage) {
+      result = result.filter((inquiry) => inquiry.formLanguage === filters.formLanguage);
+    }
+
+    // Sort
+    if (sortConfig) {
+      result.sort((a, b) => {
+        const aValue = a[sortConfig.key as keyof ClientInquiry];
+        const bValue = b[sortConfig.key as keyof ClientInquiry];
+
+        if (aValue instanceof Date && bValue instanceof Date) {
+          return sortConfig.direction === "asc"
+            ? aValue.getTime() - bValue.getTime()
+            : bValue.getTime() - aValue.getTime();
+        }
+
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          return sortConfig.direction === "asc" ? aValue - bValue : bValue - aValue;
+        }
+
+        const aStr = String(aValue).toLowerCase();
+        const bStr = String(bValue).toLowerCase();
+        return sortConfig.direction === "asc"
+          ? aStr.localeCompare(bStr)
+          : bStr.localeCompare(aStr);
+      });
+    }
+
+    return result;
+  }, [searchQuery, filters, sortConfig]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedData.length / ITEMS_PER_PAGE);
+  const paginatedData = filteredAndSortedData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      <div className="container py-8 space-y-6">
+        <DashboardHeader totalInquiries={mockInquiries.length} />
+
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+          <SearchBar value={searchQuery} onChange={(v) => { setSearchQuery(v); setCurrentPage(1); }} />
+          <FilterBar
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={clearFilters}
+          />
+        </div>
+
+        {filteredAndSortedData.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <span className="text-3xl">🔍</span>
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-1">No inquiries found</h3>
+            <p className="text-muted-foreground text-sm">
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        ) : (
+          <>
+            <InquiryTable data={paginatedData} sortConfig={sortConfig} onSort={handleSort} />
+            
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredAndSortedData.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   );
