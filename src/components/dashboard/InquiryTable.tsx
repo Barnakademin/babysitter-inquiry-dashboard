@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Pencil, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Pencil, Trash2, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -195,6 +196,16 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                             <a href={`mailto:${inquiry.email}`} className="text-primary hover:underline">
                               {inquiry.email}
                             </a>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(inquiry.email);
+                                toast.success("Email copied to clipboard");
+                              }}
+                              className="p-1 rounded hover:bg-muted transition-colors"
+                              title="Copy email"
+                            >
+                              <Copy className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                            </button>
                           </div>
                           <div className="flex items-center gap-2 text-sm">
                             <Phone className="w-4 h-4 text-muted-foreground" />
