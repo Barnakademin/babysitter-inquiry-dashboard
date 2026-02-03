@@ -6,7 +6,7 @@ import { FilterBar } from "@/components/dashboard/FilterBar";
 import { InquiryTable } from "@/components/dashboard/InquiryTable";
 import { Pagination } from "@/components/dashboard/Pagination";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
