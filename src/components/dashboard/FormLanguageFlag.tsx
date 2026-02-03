@@ -3,20 +3,19 @@ interface FormLanguageFlagProps {
 }
 
 const languageConfig = {
-  sv: { flag: "🇸🇪", label: "Swedish" },
-  en: { flag: "🇬🇧", label: "English" },
-  de: { flag: "🇩🇪", label: "German" },
-  fr: { flag: "🇫🇷", label: "French" },
-  es: { flag: "🇪🇸", label: "Spanish" },
+  sv: { label: "Sw", fullName: "Swedish" },
+  en: { label: "Eng", fullName: "English" },
+  de: { label: "De", fullName: "German" },
+  fr: { label: "Fr", fullName: "French" },
+  es: { label: "Es", fullName: "Spanish" },
 };
 
 export function FormLanguageFlag({ language }: FormLanguageFlagProps) {
   const config = languageConfig[language];
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm" title={config.label}>
-      <span className="text-lg">{config.flag}</span>
-      <span className="text-muted-foreground">{config.label}</span>
+    <span className="text-sm text-muted-foreground" title={config.fullName}>
+      {config.label}
     </span>
   );
 }
