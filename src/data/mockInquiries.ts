@@ -5,7 +5,7 @@ export interface ClientInquiry {
   phone: string;
   address: string;
   city: string;
-  service: 'babysitting' | 'nanny' | 'au-pair' | 'emergency';
+  service: 'babysitting' | 'nanny';
   languages: string[];
   needHelpWith: string;
   howOften: string;
@@ -61,7 +61,7 @@ export const mockInquiries: ClientInquiry[] = [
     phone: "+49 151 234 5678",
     address: "Birkenweg 8",
     city: "Malmö",
-    service: "au-pair",
+    service: "babysitting",
     languages: ["German", "English", "Swedish"],
     needHelpWith: "Annat",
     howOften: "Annat",
@@ -79,7 +79,7 @@ export const mockInquiries: ClientInquiry[] = [
     phone: "+46 76 789 0123",
     address: "Parkvägen 3",
     city: "Uppsala",
-    service: "emergency",
+    service: "nanny",
     languages: ["Swedish"],
     needHelpWith: "Kvälls- eller helghjälp",
     howOften: "Annat",
@@ -187,7 +187,7 @@ export const mockInquiries: ClientInquiry[] = [
     phone: "+46 73 678 9012",
     address: "Lindvägen 7",
     city: "Västerås",
-    service: "emergency",
+    service: "nanny",
     languages: ["Swedish"],
     needHelpWith: "Kvälls- eller helghjälp",
     howOften: "Annat",
@@ -223,7 +223,7 @@ export const mockInquiries: ClientInquiry[] = [
     phone: "+46 76 456 7890",
     address: "Industrivägen 33",
     city: "Örebro",
-    service: "au-pair",
+    service: "nanny",
     languages: ["Swedish", "English"],
     needHelpWith: "Annat",
     howOften: "4–5 d/v",
@@ -237,6 +237,6 @@ export const mockInquiries: ClientInquiry[] = [
 ];
 
 export const cities = [...new Set(mockInquiries.map(i => i.city))];
-export const services = ['babysitting', 'nanny', 'au-pair', 'emergency'] as const;
+export const services = ['babysitting', 'nanny'] as const;
 export const languages = [...new Set(mockInquiries.flatMap(i => i.languages))];
 export const formLanguages = ['sv', 'en', 'de', 'fr', 'es'] as const;

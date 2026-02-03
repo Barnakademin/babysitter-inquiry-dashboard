@@ -1,7 +1,7 @@
-import { Baby, Heart, Globe, AlertCircle } from "lucide-react";
+import { Baby, Heart } from "lucide-react";
 
 interface ServiceBadgeProps {
-  service: 'babysitting' | 'nanny' | 'au-pair' | 'emergency';
+  service: 'babysitting' | 'nanny';
 }
 
 const serviceConfig = {
@@ -14,16 +14,6 @@ const serviceConfig = {
     label: "KB",
     icon: Heart,
     className: "bg-primary/15 text-primary",
-  },
-  "au-pair": {
-    label: "AU",
-    icon: Globe,
-    className: "bg-accent text-accent-foreground",
-  },
-  emergency: {
-    label: "AK",
-    icon: AlertCircle,
-    className: "bg-destructive/15 text-destructive",
   },
 };
 
