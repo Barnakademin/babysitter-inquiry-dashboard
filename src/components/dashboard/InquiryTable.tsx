@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -84,6 +85,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               <TableHead>Promo</TableHead>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
               <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -156,10 +158,36 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       {inquiry.stage}
                     </span>
                   </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("Edit:", inquiry.id);
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("Delete:", inquiry.id);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
                 {expandedRow === inquiry.id && (
                   <TableRow key={`${inquiry.id}-expanded`} className="bg-muted/20 animate-fade-in">
-                    <TableCell colSpan={13} className="p-0">
+                    <TableCell colSpan={14} className="p-0">
                       <div className="p-4 space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="flex items-center gap-2 text-sm">
