@@ -86,7 +86,9 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               <TableHead>Promo</TableHead>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
               <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
-              <TableHead className="text-center">Edit/Delete</TableHead>
+              <TableHead className="text-center sticky right-0 z-30 bg-muted/30 border-l border-border">
+                Edit/Delete
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -159,12 +161,12 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       {inquiry.stage}
                     </span>
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center sticky right-0 z-20 bg-card border-l border-border">
                     <div className="flex items-center justify-center gap-2">
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-sky-500 hover:text-sky-600 hover:bg-sky-50"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary"
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log("Edit:", inquiry.id);
@@ -175,7 +177,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-sky-500 hover:text-destructive hover:bg-red-50"
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log("Delete:", inquiry.id);
