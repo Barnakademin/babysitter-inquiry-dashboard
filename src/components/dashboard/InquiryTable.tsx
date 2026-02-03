@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Pencil, Trash2, Copy } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -86,7 +86,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               <TableHead>Promo</TableHead>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
               <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-center">Edit/Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -159,23 +159,23 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       {inquiry.stage}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-2">
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        className="h-8 w-8 text-sky-500 hover:text-sky-600 hover:bg-sky-50"
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log("Edit:", inquiry.id);
                         }}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Wrench className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                        className="h-8 w-8 text-sky-500 hover:text-destructive hover:bg-red-50"
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log("Delete:", inquiry.id);
