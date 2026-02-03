@@ -18,7 +18,7 @@ export interface ClientInquiry {
 
 export const mockInquiries: ClientInquiry[] = [
   {
-    id: "INQ-001",
+    id: "1",
     name: "Anna Johansson",
     email: "anna.johansson@email.se",
     phone: "+46 70 123 4567",
@@ -35,7 +35,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-02-02T12:57:00"),
   },
   {
-    id: "INQ-002",
+    id: "2",
     name: "Marcus Berg",
     email: "marcus.berg@gmail.com",
     phone: "+46 73 456 7890",
@@ -52,7 +52,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-02-01T09:30:00"),
   },
   {
-    id: "INQ-003",
+    id: "3",
     name: "Sophie Müller",
     email: "sophie.mueller@web.de",
     phone: "+49 151 234 5678",
@@ -69,7 +69,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-30T15:45:00"),
   },
   {
-    id: "INQ-004",
+    id: "4",
     name: "Erik Lindqvist",
     email: "erik.lindqvist@company.se",
     phone: "+46 76 789 0123",
@@ -86,7 +86,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-28T18:20:00"),
   },
   {
-    id: "INQ-005",
+    id: "5",
     name: "Claire Dubois",
     email: "claire.dubois@orange.fr",
     phone: "+33 6 12 34 56 78",
@@ -103,7 +103,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-25T14:10:00"),
   },
   {
-    id: "INQ-006",
+    id: "6",
     name: "Lars Svensson",
     email: "lars.svensson@hotmail.com",
     phone: "+46 70 234 5678",
@@ -120,7 +120,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-22T11:00:00"),
   },
   {
-    id: "INQ-007",
+    id: "7",
     name: "Maria Garcia",
     email: "maria.garcia@gmail.es",
     phone: "+34 612 345 678",
@@ -137,7 +137,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-20T16:30:00"),
   },
   {
-    id: "INQ-008",
+    id: "8",
     name: "Johan Eriksson",
     email: "johan.eriksson@outlook.com",
     phone: "+46 72 567 8901",
@@ -154,7 +154,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-18T10:15:00"),
   },
   {
-    id: "INQ-009",
+    id: "9",
     name: "Emma Wilson",
     email: "emma.wilson@icloud.com",
     phone: "+44 7700 900123",
@@ -171,7 +171,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-15T13:45:00"),
   },
   {
-    id: "INQ-010",
+    id: "10",
     name: "Karl Andersson",
     email: "karl.andersson@telia.se",
     phone: "+46 73 678 9012",
@@ -188,7 +188,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-12T19:00:00"),
   },
   {
-    id: "INQ-011",
+    id: "11",
     name: "Lisa Ström",
     email: "lisa.strom@gmail.com",
     phone: "+46 70 345 6789",
@@ -205,7 +205,7 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2026-01-10T07:30:00"),
   },
   {
-    id: "INQ-012",
+    id: "12",
     name: "Peter Holm",
     email: "peter.holm@work.se",
     phone: "+46 76 456 7890",
