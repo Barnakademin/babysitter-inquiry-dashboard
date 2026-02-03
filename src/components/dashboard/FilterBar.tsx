@@ -20,10 +20,8 @@ interface FilterBarProps {
 }
 
 const serviceLabels: Record<string, string> = {
-  babysitting: "Babysitting",
-  nanny: "Nanny",
-  "au-pair": "Au Pair",
-  emergency: "Emergency",
+  babysitting: "BB",
+  nanny: "KB",
 };
 
 const languageLabels: Record<string, string> = {
