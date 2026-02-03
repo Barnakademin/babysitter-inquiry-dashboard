@@ -6,22 +6,22 @@ interface ServiceBadgeProps {
 
 const serviceConfig = {
   babysitting: {
-    label: "Babysitting",
+    label: "BB",
     icon: Baby,
     className: "bg-secondary text-secondary-foreground",
   },
   nanny: {
-    label: "Nanny",
+    label: "KB",
     icon: Heart,
     className: "bg-primary/15 text-primary",
   },
   "au-pair": {
-    label: "Au Pair",
+    label: "AU",
     icon: Globe,
     className: "bg-accent text-accent-foreground",
   },
   emergency: {
-    label: "Emergency",
+    label: "AK",
     icon: AlertCircle,
     className: "bg-destructive/15 text-destructive",
   },
