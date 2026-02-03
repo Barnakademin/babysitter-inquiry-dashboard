@@ -13,6 +13,7 @@ export interface ClientInquiry {
   formLanguage: 'sv' | 'en' | 'de' | 'fr' | 'es';
   promoCode: string | null;
   comment: string;
+  stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   createdAt: Date;
 }
 
@@ -32,6 +33,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: "WELCOME20",
     comment: "Vi behöver hjälp med att hämta barnen från skolan och vara hemma tills vi kommer från jobbet.",
+    stage: 3,
     createdAt: new Date("2026-02-02T12:57:00"),
   },
   {
@@ -49,6 +51,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: null,
     comment: "Söker en pålitlig barnflicka för våra tre barn. Helst någon med pedagogisk bakgrund.",
+    stage: 7,
     createdAt: new Date("2026-02-01T09:30:00"),
   },
   {
@@ -66,6 +69,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "de",
     promoCode: "AUPAIR2026",
     comment: "Looking for an au-pair arrangement. We can offer a private room and meals.",
+    stage: 1,
     createdAt: new Date("2026-01-30T15:45:00"),
   },
   {
@@ -83,6 +87,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: null,
     comment: "Behöver akut hjälp ibland när vårt vanliga arrangemang inte fungerar.",
+    stage: 5,
     createdAt: new Date("2026-01-28T18:20:00"),
   },
   {
@@ -100,6 +105,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "fr",
     promoCode: "FRFAMILY",
     comment: "Nous cherchons une babysitter francophone pour nos enfants bilingues.",
+    stage: 2,
     createdAt: new Date("2026-01-25T14:10:00"),
   },
   {
@@ -117,6 +123,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: null,
     comment: "Stor familj som behöver extra händer. Barnen är mellan 2-10 år.",
+    stage: 9,
     createdAt: new Date("2026-01-22T11:00:00"),
   },
   {
@@ -134,6 +141,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "es",
     promoCode: "HOLA25",
     comment: "Buscamos cuidadora para fines de semana cuando trabajamos.",
+    stage: 4,
     createdAt: new Date("2026-01-20T16:30:00"),
   },
   {
@@ -151,6 +159,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: null,
     comment: "Behöver hjälp under skollov när vi jobbar.",
+    stage: 6,
     createdAt: new Date("2026-01-18T10:15:00"),
   },
   {
@@ -168,6 +177,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "en",
     promoCode: "EXPAT10",
     comment: "Expat family looking for English-speaking nanny. Live-out preferred.",
+    stage: 8,
     createdAt: new Date("2026-01-15T13:45:00"),
   },
   {
@@ -185,6 +195,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: null,
     comment: "Ensamstående pappa som ibland behöver snabb hjälp.",
+    stage: 2,
     createdAt: new Date("2026-01-12T19:00:00"),
   },
   {
@@ -202,6 +213,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "sv",
     promoCode: "MORNING15",
     comment: "Behöver hjälp på morgonen innan skolan börjar.",
+    stage: 5,
     createdAt: new Date("2026-01-10T07:30:00"),
   },
   {
@@ -219,6 +231,7 @@ export const mockInquiries: ClientInquiry[] = [
     formLanguage: "en",
     promoCode: null,
     comment: "Interested in hosting an au-pair from another country.",
+    stage: 1,
     createdAt: new Date("2026-01-08T14:20:00"),
   },
 ];
