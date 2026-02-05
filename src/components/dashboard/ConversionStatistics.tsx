@@ -161,24 +161,6 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               />
             </div>
 
-            {/* Breakdown Tabs */}
-            <Tabs defaultValue="city" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 max-w-md">
-                <TabsTrigger value="city">By Location</TabsTrigger>
-                <TabsTrigger value="language">By Language</TabsTrigger>
-                <TabsTrigger value="kids">By Children</TabsTrigger>
-              </TabsList>
-              <TabsContent value="city" className="mt-4">
-                <BreakdownTable data={breakdownByCity} title="By Location" />
-              </TabsContent>
-              <TabsContent value="language" className="mt-4">
-                <BreakdownTable data={breakdownByLanguage} title="By Language" />
-              </TabsContent>
-              <TabsContent value="kids" className="mt-4">
-                <BreakdownTable data={breakdownByKids} title="By Number of Children" />
-              </TabsContent>
-            </Tabs>
-
             {/* Yearly Overview */}
             {yearlyStats.length > 0 && selectedMonth === "all" && (
               <div className="space-y-4">
@@ -211,18 +193,18 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pl-4">
                       {y.months.map((m) => (
                         <Card key={m.month} className="bg-muted/30">
-                            <CardContent className="p-3">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="font-medium text-sm">{m.monthLabel.replace(` ${y.year}`, "")}</span>
-                                <span className="text-xs font-medium">
-                                  {m.stats.total} inq
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs">
-                                <span className="text-green-600 dark:text-green-400">
-                                  {m.stats.converted} conv ({m.stats.conversionRate}%)
-                                </span>
-                              </div>
+                          <CardContent className="p-3">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-medium text-sm">{m.monthLabel.replace(` ${y.year}`, "")}</span>
+                              <span className="text-xs font-medium">
+                                {m.stats.total} inq
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs">
+                              <span className="text-green-600 dark:text-green-400">
+                                {m.stats.converted} conv ({m.stats.conversionRate}%)
+                              </span>
+                            </div>
                           </CardContent>
                         </Card>
                       ))}
@@ -231,6 +213,24 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 ))}
               </div>
             )}
+
+            {/* Breakdown Tabs */}
+            <Tabs defaultValue="city" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 max-w-md">
+                <TabsTrigger value="city">By Location</TabsTrigger>
+                <TabsTrigger value="language">By Language</TabsTrigger>
+                <TabsTrigger value="kids">By Children</TabsTrigger>
+              </TabsList>
+              <TabsContent value="city" className="mt-4">
+                <BreakdownTable data={breakdownByCity} title="By Location" />
+              </TabsContent>
+              <TabsContent value="language" className="mt-4">
+                <BreakdownTable data={breakdownByLanguage} title="By Language" />
+              </TabsContent>
+              <TabsContent value="kids" className="mt-4">
+                <BreakdownTable data={breakdownByKids} title="By Number of Children" />
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </CollapsibleContent>
       </Card>
