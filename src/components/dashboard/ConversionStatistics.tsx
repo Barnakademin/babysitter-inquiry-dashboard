@@ -170,7 +170,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
             </div>
 
             {/* Yearly Overview */}
-            {yearlyStats.length > 0 && selectedMonth === "all" && (
+            {yearlyStats.length > 0 && (
               <div className="space-y-4">
                 <h4 className="text-sm font-semibold text-foreground">Yearly & Monthly Overview</h4>
                 {yearlyStats.map((y) => (
