@@ -10,7 +10,7 @@ export interface ClientInquiry {
   needHelpWith: string;
   howOften: string;
   numberOfKids: number;
-  formLanguage: 'sv' | 'en' | 'de' | 'fr' | 'es';
+  formLanguage: 'sv' | 'en';
   promoCode: string | null;
   comment: string;
   stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -72,7 +72,7 @@ export const mockInquiries: ClientInquiry[] = [
     needHelpWith: "Annat",
     howOften: "Annat",
     numberOfKids: 1,
-    formLanguage: "de",
+    formLanguage: "en",
     promoCode: "AUPAIR2026",
     comment: "Looking for an au-pair arrangement. We can offer a private room and meals.",
     stage: 1,
@@ -112,7 +112,7 @@ export const mockInquiries: ClientInquiry[] = [
     needHelpWith: "Kvälls- eller helghjälp",
     howOften: "2–3 d/v",
     numberOfKids: 2,
-    formLanguage: "fr",
+    formLanguage: "en",
     promoCode: "FRFAMILY",
     comment: "Nous cherchons une babysitter francophone pour nos enfants bilingues.",
     stage: 2,
@@ -152,7 +152,7 @@ export const mockInquiries: ClientInquiry[] = [
     needHelpWith: "Kvälls- eller helghjälp",
     howOften: "Annat",
     numberOfKids: 1,
-    formLanguage: "es",
+    formLanguage: "en",
     promoCode: "HOLA25",
     comment: "Buscamos cuidadora para fines de semana cuando trabajamos.",
     stage: 4,
@@ -265,4 +265,4 @@ export const mockInquiries: ClientInquiry[] = [
 export const cities = [...new Set(mockInquiries.map(i => i.city))];
 export const services = ['babysitting', 'nanny'] as const;
 export const languages = [...new Set(mockInquiries.flatMap(i => i.languages))];
-export const formLanguages = ['sv', 'en', 'de', 'fr', 'es'] as const;
+export const formLanguages = ['sv', 'en'] as const;
