@@ -44,7 +44,8 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [isOpen, setIsOpen] = useState(true);
 
-  const yearlyStats = useMemo(() => getYearlyStats(inquiries), [inquiries]);
+  // All yearly stats for the period selector dropdown
+  const allYearlyStats = useMemo(() => getYearlyStats(inquiries), [inquiries]);
 
   const filteredInquiries = useMemo(() => {
     if (selectedMonth === "all") return inquiries;
@@ -61,6 +62,9 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
       return monthKey === selectedMonth;
     });
   }, [inquiries, selectedMonth]);
+
+  // Yearly stats based on filtered data (for display)
+  const yearlyStats = useMemo(() => getYearlyStats(filteredInquiries), [filteredInquiries]);
 
   const stats = useMemo(() => calculateConversionStats(filteredInquiries), [filteredInquiries]);
   const breakdownByCity = useMemo(() => getBreakdownByCity(filteredInquiries), [filteredInquiries]);
@@ -98,7 +102,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Time</SelectItem>
-                  {yearlyStats.map((y) => (
+                  {allYearlyStats.map((y) => (
                     <div key={y.year}>
                       <SelectItem value={`year-${y.year}`} className="font-semibold">
                         {y.year}
