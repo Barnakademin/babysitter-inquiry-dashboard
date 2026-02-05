@@ -227,20 +227,17 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               <TabsList className="grid w-full grid-cols-7 max-w-3xl">
                 <TabsTrigger value="city">Location</TabsTrigger>
                 <TabsTrigger value="language">Language</TabsTrigger>
-                <TabsTrigger value="formLang">Form Lang</TabsTrigger>
                 <TabsTrigger value="kids">Children</TabsTrigger>
                 <TabsTrigger value="helpType">Help Type</TabsTrigger>
                 <TabsTrigger value="frequency">Frequency</TabsTrigger>
                 <TabsTrigger value="nannyPref">Nanny Pref</TabsTrigger>
+                <TabsTrigger value="formLang">Form Lang</TabsTrigger>
               </TabsList>
               <TabsContent value="city" className="mt-4">
                 <BreakdownTable data={breakdownByCity} title="By Location" />
               </TabsContent>
               <TabsContent value="language" className="mt-4">
                 <BreakdownTable data={breakdownByLanguage} title="By Language" />
-              </TabsContent>
-              <TabsContent value="formLang" className="mt-4">
-                <BreakdownTable data={breakdownByFormLang} title="By Form Language" />
               </TabsContent>
               <TabsContent value="kids" className="mt-4">
                 <BreakdownTable data={breakdownByKids} title="By Number of Children" />
@@ -253,6 +250,9 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               </TabsContent>
               <TabsContent value="nannyPref" className="mt-4">
                 <BreakdownTable data={breakdownByNannyPref} title="By Nanny Language Preference" />
+              </TabsContent>
+              <TabsContent value="formLang" className="mt-4">
+                <BreakdownTable data={breakdownByFormLang} title="By Form Language" />
               </TabsContent>
             </Tabs>
           </CardContent>
