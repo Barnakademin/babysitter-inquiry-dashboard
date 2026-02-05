@@ -111,8 +111,8 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               </SortableHeader>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
               <TableHead className="px-1.5 whitespace-nowrap">Promo</TableHead>
-              <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
               <SortableHeader columnKey="formLanguage" sortConfig={sortConfig} onSort={onSort}>Form</SortableHeader>
+              <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
               <TableHead className="text-center sticky right-0 z-30 bg-muted/30 border-l border-border pl-4">
                 Actions
               </TableHead>
@@ -181,6 +181,9 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                     <PromoBadge code={inquiry.promoCode} />
                   </TableCell>
                   <TableCell>
+                    <FormLanguageFlag language={inquiry.formLanguage} />
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-2">
                       <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary font-semibold text-sm">
                         {inquiry.stage}
@@ -189,9 +192,6 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                         {format(inquiry.stageDate, "MMM d")}
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <FormLanguageFlag language={inquiry.formLanguage} />
                   </TableCell>
                   <TableCell className="text-center sticky right-0 z-20 bg-card border-l border-border">
                     <div className="flex items-center justify-center gap-2">
