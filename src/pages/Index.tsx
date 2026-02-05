@@ -5,7 +5,9 @@ import { SearchBar } from "@/components/dashboard/SearchBar";
 import { FilterBar } from "@/components/dashboard/FilterBar";
 import { InquiryTable } from "@/components/dashboard/InquiryTable";
 import { Pagination } from "@/components/dashboard/Pagination";
-import { ConversionStatistics } from "@/components/dashboard/ConversionStatistics";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { BarChart3 } from "lucide-react";
 const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
@@ -104,7 +106,12 @@ const Index = () => {
       <div className="container py-8 space-y-6">
         <DashboardHeader totalInquiries={mockInquiries.length} />
 
-        <ConversionStatistics inquiries={mockInquiries} />
+        <Button variant="outline" asChild className="gap-2">
+          <Link to="/statistics">
+            <BarChart3 className="h-4 w-4" />
+            Conversion Statistics
+          </Link>
+        </Button>
 
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           <SearchBar value={searchQuery} onChange={(v) => { setSearchQuery(v); setCurrentPage(1); }} />
