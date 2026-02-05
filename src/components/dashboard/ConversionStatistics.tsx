@@ -47,6 +47,20 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   // All yearly stats for the period selector dropdown
   const allYearlyStats = useMemo(() => getYearlyStats(inquiries), [inquiries]);
 
+  const selectedPeriodLabel = useMemo(() => {
+    if (selectedMonth === "all") return "All time";
+    if (selectedMonth.startsWith("year-")) {
+      const year = selectedMonth.replace("year-", "");
+      return `Year ${year}`;
+    }
+
+    const monthMatch = allYearlyStats
+      .flatMap((y) => y.months)
+      .find((m) => m.month === selectedMonth);
+
+    return monthMatch?.monthLabel ?? selectedMonth;
+  }, [allYearlyStats, selectedMonth]);
+
   const filteredInquiries = useMemo(() => {
     if (selectedMonth === "all") return inquiries;
     // Check if it's a year selection
@@ -93,6 +107,9 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 <p className="text-sm text-muted-foreground mt-0.5">
                   Analyze inquiry-to-client conversion metrics
                 </p>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Period: <span className="font-medium text-foreground">{selectedPeriodLabel}</span>
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -109,7 +126,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                       </SelectItem>
                       {y.months.map((m) => (
                         <SelectItem key={m.month} value={m.month} className="pl-6">
-                          {m.monthLabel.replace(` ${y.year}`, "")}
+                          {m.monthLabel}
                         </SelectItem>
                       ))}
                     </div>
@@ -207,7 +224,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                         <Card key={m.month} className="bg-muted/30">
                           <CardContent className="p-3">
                             <div className="flex items-center justify-between mb-1">
-                              <span className="font-medium text-sm">{m.monthLabel.replace(` ${y.year}`, "")}</span>
+                              <span className="font-medium text-sm">{m.monthLabel}</span>
                               <span className="text-xs font-medium">
                                 {m.stats.total} inq
                               </span>
