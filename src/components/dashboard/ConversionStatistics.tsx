@@ -5,7 +5,7 @@ import {
   getBreakdownByCity,
   getBreakdownByLanguage,
   getBreakdownByNumberOfKids,
-  getMonthlyStats,
+  getYearlyStats,
 } from "@/lib/conversionStats";
 import { StatCard } from "./StatCard";
 import { BreakdownTable } from "./BreakdownTable";
@@ -40,10 +40,18 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [isOpen, setIsOpen] = useState(true);
 
-  const monthlyStats = useMemo(() => getMonthlyStats(inquiries), [inquiries]);
+  const yearlyStats = useMemo(() => getYearlyStats(inquiries), [inquiries]);
 
   const filteredInquiries = useMemo(() => {
     if (selectedMonth === "all") return inquiries;
+    // Check if it's a year selection
+    if (selectedMonth.startsWith("year-")) {
+      const year = selectedMonth.replace("year-", "");
+      return inquiries.filter((i) => {
+        return i.createdAt.getFullYear().toString() === year;
+      });
+    }
+    // Month selection
     return inquiries.filter((i) => {
       const monthKey = `${i.createdAt.getFullYear()}-${String(i.createdAt.getMonth() + 1).padStart(2, "0")}`;
       return monthKey === selectedMonth;
@@ -82,10 +90,17 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Time</SelectItem>
-                  {monthlyStats.map((m) => (
-                    <SelectItem key={m.month} value={m.month}>
-                      {m.monthLabel}
-                    </SelectItem>
+                  {yearlyStats.map((y) => (
+                    <div key={y.year}>
+                      <SelectItem value={`year-${y.year}`} className="font-semibold">
+                        {y.year}
+                      </SelectItem>
+                      {y.months.map((m) => (
+                        <SelectItem key={m.month} value={m.month} className="pl-6">
+                          {m.monthLabel.replace(` ${y.year}`, "")}
+                        </SelectItem>
+                      ))}
+                    </div>
                   ))}
                 </SelectContent>
               </Select>
@@ -164,37 +179,59 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               </TabsContent>
             </Tabs>
 
-            {/* Monthly Overview */}
-            {monthlyStats.length > 1 && selectedMonth === "all" && (
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-foreground">Monthly Overview</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {monthlyStats.map((m) => (
-                    <Card key={m.month} className="bg-muted/30">
+            {/* Yearly Overview */}
+            {yearlyStats.length > 0 && selectedMonth === "all" && (
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-foreground">Yearly & Monthly Overview</h4>
+                {yearlyStats.map((y) => (
+                  <div key={y.year} className="space-y-2">
+                    <Card className="bg-primary/5 border-primary/20">
                       <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">{m.monthLabel}</span>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-semibold text-lg">{y.year}</span>
                           <span className="text-sm text-muted-foreground">
-                            {m.stats.total} inquiries
+                            {y.stats.total} inquiries
                           </span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-green-600 dark:text-green-400">
-                            {m.stats.converted} converted
+                            {y.stats.converted} converted
                           </span>
                           <span className="text-muted-foreground">
-                            {m.stats.conversionRate}% rate
+                            {y.stats.conversionRate}% rate
                           </span>
-                          {m.stats.avgDaysToConvert !== null && (
+                          {y.stats.avgDaysToConvert !== null && (
                             <span className="text-muted-foreground">
-                              {m.stats.avgDaysToConvert}d avg
+                              {y.stats.avgDaysToConvert}d avg
                             </span>
                           )}
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
-                </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pl-4">
+                      {y.months.map((m) => (
+                        <Card key={m.month} className="bg-muted/30">
+                          <CardContent className="p-3">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-medium text-sm">{m.monthLabel.replace(` ${y.year}`, "")}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {m.stats.total}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs">
+                              <span className="text-green-600 dark:text-green-400">
+                                {m.stats.converted} conv
+                              </span>
+                              <span className="text-muted-foreground">
+                                {m.stats.conversionRate}%
+                              </span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </CardContent>

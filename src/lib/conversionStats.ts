@@ -31,7 +31,14 @@ export interface BreakdownItem {
 export interface MonthlyStats {
   month: string;
   monthLabel: string;
+  year: string;
   stats: ConversionStats;
+}
+
+export interface YearlyStats {
+  year: string;
+  stats: ConversionStats;
+  months: MonthlyStats[];
 }
 
 export function getConversionStatus(inquiry: ClientInquiry): ConversionStatus {
@@ -155,11 +162,41 @@ export function getMonthlyStats(inquiries: ClientInquiry[]): MonthlyStats[] {
   return sortedMonths.map((month) => {
     const monthInquiries = monthMap.get(month) || [];
     const firstInquiry = monthInquiries[0];
+    const year = format(firstInquiry.createdAt, "yyyy");
     
     return {
       month,
       monthLabel: format(firstInquiry.createdAt, "MMMM yyyy"),
+      year,
       stats: calculateConversionStats(monthInquiries),
+    };
+  });
+}
+
+export function getYearlyStats(inquiries: ClientInquiry[]): YearlyStats[] {
+  const monthlyStats = getMonthlyStats(inquiries);
+  
+  // Group months by year
+  const yearMap = new Map<string, MonthlyStats[]>();
+  
+  monthlyStats.forEach((m) => {
+    const existing = yearMap.get(m.year) || [];
+    yearMap.set(m.year, [...existing, m]);
+  });
+  
+  // Sort years (most recent first)
+  const sortedYears = [...yearMap.keys()].sort().reverse();
+  
+  return sortedYears.map((year) => {
+    const months = yearMap.get(year) || [];
+    const yearInquiries = inquiries.filter(
+      (i) => format(i.createdAt, "yyyy") === year
+    );
+    
+    return {
+      year,
+      stats: calculateConversionStats(yearInquiries),
+      months,
     };
   });
 }
