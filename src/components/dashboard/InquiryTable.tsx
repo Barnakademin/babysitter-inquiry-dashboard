@@ -109,7 +109,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               <SortableHeader columnKey="numberOfKids" sortConfig={sortConfig} onSort={onSort}>
                 <Users className="w-4 h-4" />
               </SortableHeader>
-              <TableHead className="px-2">Promo</TableHead>
+              <TableHead className="px-1.5 whitespace-nowrap">Promo</TableHead>
               <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
               <SortableHeader columnKey="formLanguage" sortConfig={sortConfig} onSort={onSort}>Form</SortableHeader>
@@ -171,7 +171,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       {inquiry.numberOfKids}
                     </span>
                   </TableCell>
-                  <TableCell className="px-2">
+                  <TableCell className="px-1.5">
                     <PromoBadge code={inquiry.promoCode} />
                   </TableCell>
                   <TableCell>
