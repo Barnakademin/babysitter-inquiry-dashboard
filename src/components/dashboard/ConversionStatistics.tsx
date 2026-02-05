@@ -194,11 +194,11 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                           </span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
-                          <span className="text-green-600 dark:text-green-400">
-                            {y.stats.converted} converted
+                          <span className="text-foreground">
+                            {y.stats.total} inquiries
                           </span>
-                          <span className="text-muted-foreground">
-                            {y.stats.conversionRate}% rate
+                          <span className="text-green-600 dark:text-green-400">
+                            {y.stats.converted} converted ({y.stats.conversionRate}%)
                           </span>
                           {y.stats.avgDaysToConvert !== null && (
                             <span className="text-muted-foreground">
@@ -211,21 +211,18 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pl-4">
                       {y.months.map((m) => (
                         <Card key={m.month} className="bg-muted/30">
-                          <CardContent className="p-3">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="font-medium text-sm">{m.monthLabel.replace(` ${y.year}`, "")}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {m.stats.total}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs">
-                              <span className="text-green-600 dark:text-green-400">
-                                {m.stats.converted} conv
-                              </span>
-                              <span className="text-muted-foreground">
-                                {m.stats.conversionRate}%
-                              </span>
-                            </div>
+                            <CardContent className="p-3">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-medium text-sm">{m.monthLabel.replace(` ${y.year}`, "")}</span>
+                                <span className="text-xs font-medium">
+                                  {m.stats.total} inq
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 text-xs">
+                                <span className="text-green-600 dark:text-green-400">
+                                  {m.stats.converted} conv ({m.stats.conversionRate}%)
+                                </span>
+                              </div>
                           </CardContent>
                         </Card>
                       ))}
