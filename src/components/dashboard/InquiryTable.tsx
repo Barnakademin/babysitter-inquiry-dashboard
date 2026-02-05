@@ -184,9 +184,14 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary font-semibold text-sm">
-                      {inquiry.stage}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary font-semibold text-sm">
+                        {inquiry.stage}
+                      </span>
+                      <div className="text-xs text-muted-foreground whitespace-nowrap">
+                        {format(inquiry.stageDate, "MMM d")}
+                      </div>
+                    </div>
                   </TableCell>
                   <TableCell className="text-center sticky right-0 z-20 bg-card border-l border-border">
                     <div className="flex items-center justify-center gap-2">
