@@ -85,7 +85,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
 
   const handleConfirmDelete = () => {
     if (clientToDelete) {
-      console.log("Delete confirmed:", clientToDelete.id);
+      // TODO: Implement actual delete logic here
       toast.success(`Client "${clientToDelete.name}" deleted`);
     }
     setDeleteDialogOpen(false);
@@ -196,7 +196,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                         className="h-8 w-8 text-muted-foreground hover:text-primary"
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("Edit:", inquiry.id);
+                          // TODO: Implement edit functionality
                         }}
                       >
                         <Wrench className="h-4 w-4" />
