@@ -57,7 +57,7 @@ function SortableHeader({
 }) {
   return (
     <TableHead 
-      className="cursor-pointer hover:bg-muted/50 transition-colors select-none"
+      className="cursor-pointer hover:bg-muted/50 transition-colors select-none whitespace-nowrap"
       onClick={() => onSort(columnKey)}
     >
       <div className="flex items-center gap-1">
@@ -113,8 +113,8 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               <TableHead>Promo</TableHead>
               <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
               <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
-              <TableHead className="text-center sticky right-0 z-30 bg-muted/30 border-l border-border">
-                Edit/Delete
+              <TableHead className="text-center sticky right-0 z-30 bg-muted/30 border-l border-border pl-4">
+                Actions
               </TableHead>
             </TableRow>
           </TableHeader>
