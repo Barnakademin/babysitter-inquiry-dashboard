@@ -5,7 +5,7 @@ import { SearchBar } from "@/components/dashboard/SearchBar";
 import { FilterBar } from "@/components/dashboard/FilterBar";
 import { InquiryTable } from "@/components/dashboard/InquiryTable";
 import { Pagination } from "@/components/dashboard/Pagination";
-
+import { ConversionStatistics } from "@/components/dashboard/ConversionStatistics";
 const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
@@ -103,6 +103,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <div className="container py-8 space-y-6">
         <DashboardHeader totalInquiries={mockInquiries.length} />
+
+        <ConversionStatistics inquiries={mockInquiries} />
 
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           <SearchBar value={searchQuery} onChange={(v) => { setSearchQuery(v); setCurrentPage(1); }} />
