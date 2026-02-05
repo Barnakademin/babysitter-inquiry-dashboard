@@ -5,6 +5,9 @@ import {
   getBreakdownByCity,
   getBreakdownByLanguage,
   getBreakdownByNumberOfKids,
+  getBreakdownByHelpType,
+  getBreakdownByFrequency,
+  getBreakdownByNannyLanguagePreference,
   getYearlyStats,
 } from "@/lib/conversionStats";
 import { StatCard } from "./StatCard";
@@ -62,6 +65,9 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const breakdownByCity = useMemo(() => getBreakdownByCity(filteredInquiries), [filteredInquiries]);
   const breakdownByLanguage = useMemo(() => getBreakdownByLanguage(filteredInquiries), [filteredInquiries]);
   const breakdownByKids = useMemo(() => getBreakdownByNumberOfKids(filteredInquiries), [filteredInquiries]);
+  const breakdownByHelpType = useMemo(() => getBreakdownByHelpType(filteredInquiries), [filteredInquiries]);
+  const breakdownByFrequency = useMemo(() => getBreakdownByFrequency(filteredInquiries), [filteredInquiries]);
+  const breakdownByNannyPref = useMemo(() => getBreakdownByNannyLanguagePreference(filteredInquiries), [filteredInquiries]);
 
   const notConvertedRate = stats.total > 0 
     ? Math.round((stats.notConverted / stats.total) * 100) 
@@ -216,10 +222,13 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
 
             {/* Breakdown Tabs */}
             <Tabs defaultValue="city" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 max-w-md">
-                <TabsTrigger value="city">By Location</TabsTrigger>
-                <TabsTrigger value="language">By Language</TabsTrigger>
-                <TabsTrigger value="kids">By Children</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-6 max-w-2xl">
+                <TabsTrigger value="city">Location</TabsTrigger>
+                <TabsTrigger value="language">Language</TabsTrigger>
+                <TabsTrigger value="kids">Children</TabsTrigger>
+                <TabsTrigger value="helpType">Help Type</TabsTrigger>
+                <TabsTrigger value="frequency">Frequency</TabsTrigger>
+                <TabsTrigger value="nannyPref">Nanny Pref</TabsTrigger>
               </TabsList>
               <TabsContent value="city" className="mt-4">
                 <BreakdownTable data={breakdownByCity} title="By Location" />
@@ -229,6 +238,15 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               </TabsContent>
               <TabsContent value="kids" className="mt-4">
                 <BreakdownTable data={breakdownByKids} title="By Number of Children" />
+              </TabsContent>
+              <TabsContent value="helpType" className="mt-4">
+                <BreakdownTable data={breakdownByHelpType} title="By Help Type" />
+              </TabsContent>
+              <TabsContent value="frequency" className="mt-4">
+                <BreakdownTable data={breakdownByFrequency} title="By Frequency" />
+              </TabsContent>
+              <TabsContent value="nannyPref" className="mt-4">
+                <BreakdownTable data={breakdownByNannyPref} title="By Nanny Language Preference" />
               </TabsContent>
             </Tabs>
           </CardContent>

@@ -146,6 +146,68 @@ export function getBreakdownByNumberOfKids(inquiries: ClientInquiry[]): Breakdow
   });
 }
 
+export function getBreakdownByHelpType(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const helpTypes = [...new Set(inquiries.map((i) => i.needHelpWith))];
+  
+  return helpTypes.map((helpType) => {
+    const typeInquiries = inquiries.filter((i) => i.needHelpWith === helpType);
+    const stats = calculateConversionStats(typeInquiries);
+    
+    return {
+      label: helpType,
+      total: stats.total,
+      converted: stats.converted,
+      notConverted: stats.notConverted,
+      inProgress: stats.inProgress,
+      conversionRate: stats.conversionRate,
+      avgDaysToConvert: stats.avgDaysToConvert,
+    };
+  }).sort((a, b) => b.total - a.total);
+}
+
+export function getBreakdownByFrequency(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const frequencies = [...new Set(inquiries.map((i) => i.howOften))];
+  
+  return frequencies.map((frequency) => {
+    const freqInquiries = inquiries.filter((i) => i.howOften === frequency);
+    const stats = calculateConversionStats(freqInquiries);
+    
+    return {
+      label: frequency,
+      total: stats.total,
+      converted: stats.converted,
+      notConverted: stats.notConverted,
+      inProgress: stats.inProgress,
+      conversionRate: stats.conversionRate,
+      avgDaysToConvert: stats.avgDaysToConvert,
+    };
+  }).sort((a, b) => b.total - a.total);
+}
+
+export function getBreakdownByNannyLanguagePreference(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const preferences = [...new Set(inquiries.map((i) => i.nannyLanguagePreference))];
+  
+  const labelMap: Record<string, string> = {
+    'swedish-speaking': 'Swedish-speaking nanny',
+    'bilingual': 'Bilingual nanny',
+  };
+  
+  return preferences.map((pref) => {
+    const prefInquiries = inquiries.filter((i) => i.nannyLanguagePreference === pref);
+    const stats = calculateConversionStats(prefInquiries);
+    
+    return {
+      label: labelMap[pref] || pref,
+      total: stats.total,
+      converted: stats.converted,
+      notConverted: stats.notConverted,
+      inProgress: stats.inProgress,
+      conversionRate: stats.conversionRate,
+      avgDaysToConvert: stats.avgDaysToConvert,
+    };
+  }).sort((a, b) => b.total - a.total);
+}
+
 export function getMonthlyStats(inquiries: ClientInquiry[]): MonthlyStats[] {
   // Group inquiries by month of creation
   const monthMap = new Map<string, ClientInquiry[]>();

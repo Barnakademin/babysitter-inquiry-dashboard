@@ -16,6 +16,7 @@ export interface ClientInquiry {
   stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   stageDate: Date;
   createdAt: Date;
+  nannyLanguagePreference: 'swedish-speaking' | 'bilingual';
 }
 
 export const mockInquiries: ClientInquiry[] = [
@@ -37,6 +38,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 3,
     stageDate: new Date("2026-02-03T10:30:00"),
     createdAt: new Date("2026-02-02T12:57:00"),
+    nannyLanguagePreference: "swedish-speaking",
   },
   {
     id: "2",
@@ -56,6 +58,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 7,
     stageDate: new Date("2026-02-04T14:15:00"),
     createdAt: new Date("2026-02-01T09:30:00"),
+    nannyLanguagePreference: "bilingual",
   },
   {
     id: "3",
@@ -75,6 +78,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 1,
     stageDate: new Date("2026-01-30T15:45:00"),
     createdAt: new Date("2026-01-30T15:45:00"),
+    nannyLanguagePreference: "bilingual",
   },
   {
     id: "4",
@@ -94,6 +98,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 5,
     stageDate: new Date("2026-02-01T09:00:00"),
     createdAt: new Date("2026-01-28T18:20:00"),
+    nannyLanguagePreference: "swedish-speaking",
   },
   {
     id: "5",
@@ -113,6 +118,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 2,
     stageDate: new Date("2026-01-26T11:20:00"),
     createdAt: new Date("2026-01-25T14:10:00"),
+    nannyLanguagePreference: "bilingual",
   },
   {
     id: "6",
@@ -132,6 +138,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 9,
     stageDate: new Date("2026-02-05T08:00:00"),
     createdAt: new Date("2026-01-22T11:00:00"),
+    nannyLanguagePreference: "swedish-speaking",
   },
   {
     id: "7",
@@ -151,6 +158,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 4,
     stageDate: new Date("2026-01-22T10:00:00"),
     createdAt: new Date("2026-01-20T16:30:00"),
+    nannyLanguagePreference: "bilingual",
   },
   {
     id: "8",
@@ -170,6 +178,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 6,
     stageDate: new Date("2026-01-25T16:45:00"),
     createdAt: new Date("2026-01-18T10:15:00"),
+    nannyLanguagePreference: "swedish-speaking",
   },
   {
     id: "9",
@@ -189,6 +198,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 8,
     stageDate: new Date("2026-02-02T13:30:00"),
     createdAt: new Date("2026-01-15T13:45:00"),
+    nannyLanguagePreference: "bilingual",
   },
   {
     id: "10",
@@ -208,6 +218,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 2,
     stageDate: new Date("2026-01-14T12:00:00"),
     createdAt: new Date("2026-01-12T19:00:00"),
+    nannyLanguagePreference: "swedish-speaking",
   },
   {
     id: "11",
@@ -227,6 +238,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 5,
     stageDate: new Date("2026-01-18T08:30:00"),
     createdAt: new Date("2026-01-10T07:30:00"),
+    nannyLanguagePreference: "swedish-speaking",
   },
   {
     id: "12",
@@ -246,6 +258,7 @@ export const mockInquiries: ClientInquiry[] = [
     stage: 1,
     stageDate: new Date("2026-01-08T14:20:00"),
     createdAt: new Date("2026-01-08T14:20:00"),
+    nannyLanguagePreference: "bilingual",
   },
 ];
 
