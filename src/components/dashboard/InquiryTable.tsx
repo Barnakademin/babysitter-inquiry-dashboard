@@ -11,6 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ClientInquiry } from "@/data/mockInquiries";
 import { ServiceBadge } from "./ServiceBadge";
 import { LanguageBadge } from "./LanguageBadge";
@@ -60,9 +70,26 @@ function SortableHeader({
 
 export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<ClientInquiry | null>(null);
 
   const toggleRow = (id: string) => {
     setExpandedRow(expandedRow === id ? null : id);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, inquiry: ClientInquiry) => {
+    e.stopPropagation();
+    setClientToDelete(inquiry);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (clientToDelete) {
+      console.log("Delete confirmed:", clientToDelete.id);
+      toast.success(`Client "${clientToDelete.name}" deleted`);
+    }
+    setDeleteDialogOpen(false);
+    setClientToDelete(null);
   };
 
   return (
@@ -178,10 +205,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log("Delete:", inquiry.id);
-                        }}
+                        onClick={(e) => handleDeleteClick(e, inquiry)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -247,6 +271,23 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
           </TableBody>
         </Table>
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to delete this client?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete <span className="font-semibold">{clientToDelete?.name}</span>. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Yes, Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
