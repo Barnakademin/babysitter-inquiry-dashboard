@@ -32,8 +32,11 @@ import {
   BarChart3,
   ChevronDown,
   ChevronUp,
+  X,
+  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface ConversionStatisticsProps {
@@ -103,12 +106,31 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 <BarChart3 className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-xl">Client Conversion Statistics</CardTitle>
+                <div className="flex items-center gap-3">
+                  <CardTitle className="text-xl">Client Conversion Statistics</CardTitle>
+                  {selectedMonth !== "all" && (
+                    <Badge 
+                      variant="secondary" 
+                      className="h-7 gap-1.5 pl-3 pr-1.5 text-sm font-medium animate-in fade-in-0 slide-in-from-left-2 duration-200"
+                    >
+                      <Calendar className="w-3.5 h-3.5" />
+                      {selectedPeriodLabel}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-5 w-5 rounded-full hover:bg-destructive/20 hover:text-destructive"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedMonth("all");
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground mt-0.5">
                   Analyze inquiry-to-client conversion metrics
-                </p>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  Period: <span className="font-medium text-foreground">{selectedPeriodLabel}</span>
                 </p>
               </div>
             </div>
@@ -188,23 +210,26 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               <div className="space-y-4">
                 <h4 className="text-sm font-semibold text-foreground">Yearly & Monthly Overview</h4>
                 {yearlyStats.map((y) => (
-                  <div key={y.year} className="space-y-2">
+                  <div key={y.year} className="space-y-3">
                     <Card 
-                      className={`bg-primary/5 border-primary/20 cursor-pointer transition-all hover:bg-primary/10 ${selectedMonth === `year-${y.year}` ? 'ring-2 ring-primary' : ''}`}
+                      className={`bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20 cursor-pointer transition-all duration-200 hover:from-primary/10 hover:to-primary/15 hover:shadow-md hover:scale-[1.01] ${selectedMonth === `year-${y.year}` ? 'ring-2 ring-primary shadow-md' : ''}`}
                       onClick={() => setSelectedMonth(`year-${y.year}`)}
                     >
                       <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-semibold text-lg">{y.year}</span>
-                          <span className="text-xs text-muted-foreground">
-                            Click to view full year
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-primary" />
+                            <span className="font-semibold text-lg">{y.year}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                            Click to select year
                           </span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
-                          <span className="text-foreground">
+                          <span className="text-foreground font-medium">
                             {y.stats.total} inquiries
                           </span>
-                          <span className="text-green-600 dark:text-green-400">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-medium">
                             {y.stats.converted} converted ({y.stats.conversionRate}%)
                           </span>
                           {y.stats.avgDaysToConvert !== null && (
@@ -215,23 +240,25 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                         </div>
                       </CardContent>
                     </Card>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pl-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 pl-2">
                       {y.months.map((m) => (
                         <Card 
                           key={m.month} 
-                          className={`bg-muted/30 cursor-pointer transition-all hover:bg-muted/50 hover:border-primary/50 ${selectedMonth === m.month ? 'ring-2 ring-primary border-primary' : ''}`}
+                          className={`group bg-card cursor-pointer transition-all duration-200 hover:bg-accent hover:shadow-sm hover:scale-[1.02] hover:-translate-y-0.5 ${selectedMonth === m.month ? 'ring-2 ring-primary border-primary bg-primary/5 shadow-sm' : 'border-muted'}`}
                           onClick={() => setSelectedMonth(m.month)}
                         >
                           <CardContent className="p-3">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="font-medium text-sm">{m.monthLabel}</span>
-                              <span className="text-xs font-medium">
-                                {m.stats.total} inq
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className={`font-medium text-sm transition-colors ${selectedMonth === m.month ? 'text-primary' : 'group-hover:text-primary'}`}>
+                                {m.monthLabel}
                               </span>
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                                {m.stats.total}
+                              </Badge>
                             </div>
-                            <div className="flex items-center gap-2 text-xs">
-                              <span className="text-green-600 dark:text-green-400">
-                                {m.stats.converted} conv ({m.stats.conversionRate}%)
+                            <div className="flex items-center gap-1.5 text-xs">
+                              <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                                {m.stats.converted} ({m.stats.conversionRate}%)
                               </span>
                             </div>
                           </CardContent>
