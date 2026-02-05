@@ -109,10 +109,10 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
               <SortableHeader columnKey="numberOfKids" sortConfig={sortConfig} onSort={onSort}>
                 <Users className="w-4 h-4" />
               </SortableHeader>
-              <SortableHeader columnKey="formLanguage" sortConfig={sortConfig} onSort={onSort}>Form</SortableHeader>
-              <TableHead>Promo</TableHead>
-              <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
+              <TableHead className="px-2">Promo</TableHead>
               <SortableHeader columnKey="stage" sortConfig={sortConfig} onSort={onSort}>Stage</SortableHeader>
+              <SortableHeader columnKey="createdAt" sortConfig={sortConfig} onSort={onSort}>Created</SortableHeader>
+              <SortableHeader columnKey="formLanguage" sortConfig={sortConfig} onSort={onSort}>Form</SortableHeader>
               <TableHead className="text-center sticky right-0 z-30 bg-muted/30 border-l border-border pl-4">
                 Actions
               </TableHead>
@@ -171,17 +171,8 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                       {inquiry.numberOfKids}
                     </span>
                   </TableCell>
-                  <TableCell>
-                    <FormLanguageFlag language={inquiry.formLanguage} />
-                  </TableCell>
-                  <TableCell>
+                  <TableCell className="px-2">
                     <PromoBadge code={inquiry.promoCode} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm">
-                      <div className="font-medium">{format(inquiry.createdAt, "MMM d, yyyy")}</div>
-                      <div className="text-muted-foreground text-xs">{format(inquiry.createdAt, "h:mm a")}</div>
-                    </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -192,6 +183,15 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                         {format(inquiry.stageDate, "MMM d")}
                       </div>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-sm">
+                      <div className="font-medium">{format(inquiry.createdAt, "MMM d, yyyy")}</div>
+                      <div className="text-muted-foreground text-xs">{format(inquiry.createdAt, "h:mm a")}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <FormLanguageFlag language={inquiry.formLanguage} />
                   </TableCell>
                   <TableCell className="text-center sticky right-0 z-20 bg-card border-l border-border">
                     <div className="flex items-center justify-center gap-2">
