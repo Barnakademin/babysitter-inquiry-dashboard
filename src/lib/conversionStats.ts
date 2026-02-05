@@ -208,6 +208,33 @@ export function getBreakdownByNannyLanguagePreference(inquiries: ClientInquiry[]
   }).sort((a, b) => b.total - a.total);
 }
 
+export function getBreakdownByFormLanguage(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const formLanguages = [...new Set(inquiries.map((i) => i.formLanguage))];
+  
+  const labelMap: Record<string, string> = {
+    'sv': 'Swedish',
+    'en': 'English',
+    'de': 'German',
+    'fr': 'French',
+    'es': 'Spanish',
+  };
+  
+  return formLanguages.map((lang) => {
+    const langInquiries = inquiries.filter((i) => i.formLanguage === lang);
+    const stats = calculateConversionStats(langInquiries);
+    
+    return {
+      label: labelMap[lang] || lang,
+      total: stats.total,
+      converted: stats.converted,
+      notConverted: stats.notConverted,
+      inProgress: stats.inProgress,
+      conversionRate: stats.conversionRate,
+      avgDaysToConvert: stats.avgDaysToConvert,
+    };
+  }).sort((a, b) => b.total - a.total);
+}
+
 export function getMonthlyStats(inquiries: ClientInquiry[]): MonthlyStats[] {
   // Group inquiries by month of creation
   const monthMap = new Map<string, ClientInquiry[]>();
