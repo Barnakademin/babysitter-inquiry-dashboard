@@ -113,23 +113,16 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <Select value={selectedMonth.startsWith("year-") || selectedMonth === "all" ? selectedMonth : `year-${selectedMonth.split("-")[0]}`} onValueChange={setSelectedMonth}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select period" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Time</SelectItem>
                   {allYearlyStats.map((y) => (
-                    <div key={y.year}>
-                      <SelectItem value={`year-${y.year}`} className="font-semibold">
-                        {y.year}
-                      </SelectItem>
-                      {y.months.map((m) => (
-                        <SelectItem key={m.month} value={m.month} className="pl-6">
-                          {m.monthLabel}
-                        </SelectItem>
-                      ))}
-                    </div>
+                    <SelectItem key={y.year} value={`year-${y.year}`}>
+                      {y.year}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -221,7 +214,11 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                     </Card>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pl-4">
                       {y.months.map((m) => (
-                        <Card key={m.month} className="bg-muted/30">
+                        <Card 
+                          key={m.month} 
+                          className={`bg-muted/30 cursor-pointer transition-all hover:bg-muted/50 hover:border-primary/50 ${selectedMonth === m.month ? 'ring-2 ring-primary border-primary' : ''}`}
+                          onClick={() => setSelectedMonth(m.month)}
+                        >
                           <CardContent className="p-3">
                             <div className="flex items-center justify-between mb-1">
                               <span className="font-medium text-sm">{m.monthLabel}</span>
