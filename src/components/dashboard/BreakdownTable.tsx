@@ -1,12 +1,10 @@
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { BreakdownItem } from "@/lib/conversionStats";
 import { cn } from "@/lib/utils";
 
@@ -18,8 +16,12 @@ interface BreakdownTableProps {
 
 export function BreakdownTable({ data, title, maxVisibleRows = 10 }: BreakdownTableProps) {
   const hasMoreRows = data.length > maxVisibleRows;
-  // Each row is approximately 41px, header is about 41px
-  const maxHeight = maxVisibleRows * 41 + 41;
+
+  // Fixed-height container is required so the internal scroller engages and the page doesn't grow.
+  // Table cells use p-4 (≈ 32px) + borders, so ~41px per row is a good visual approximation.
+  const rowHeightPx = 41;
+  const headerHeightPx = 48; // TableHead uses h-12
+  const fixedHeightPx = maxVisibleRows * rowHeightPx + headerHeightPx;
 
   return (
     <div className="space-y-3">
@@ -31,9 +33,13 @@ export function BreakdownTable({ data, title, maxVisibleRows = 10 }: BreakdownTa
           </span>
         )}
       </div>
+
       <div className="rounded-lg border bg-card overflow-hidden">
-        <ScrollArea style={{ maxHeight: `${maxHeight}px` }} className="w-full">
-          <Table>
+        <div
+          className={cn("w-full", hasMoreRows && "overflow-y-auto")}
+          style={hasMoreRows ? { height: `${fixedHeightPx}px` } : undefined}
+        >
+          <table className="w-full caption-bottom text-sm">
             <TableHeader className="sticky top-0 bg-muted/50 z-10">
               <TableRow>
                 <TableHead className="font-semibold">{title.replace("By ", "")}</TableHead>
@@ -45,6 +51,7 @@ export function BreakdownTable({ data, title, maxVisibleRows = 10 }: BreakdownTa
                 <TableHead className="text-center font-semibold">Avg Days</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {data.map((item) => (
                 <TableRow key={item.label}>
@@ -66,12 +73,16 @@ export function BreakdownTable({ data, title, maxVisibleRows = 10 }: BreakdownTa
                     </span>
                   </TableCell>
                   <TableCell className="text-center">
-                    <span className={cn(
-                      "font-semibold",
-                      item.conversionRate >= 50 ? "text-green-600 dark:text-green-400" : 
-                      item.conversionRate >= 25 ? "text-amber-600 dark:text-amber-400" : 
-                      "text-red-600 dark:text-red-400"
-                    )}>
+                    <span
+                      className={cn(
+                        "font-semibold",
+                        item.conversionRate >= 50
+                          ? "text-green-600 dark:text-green-400"
+                          : item.conversionRate >= 25
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-red-600 dark:text-red-400",
+                      )}
+                    >
                       {item.conversionRate}%
                     </span>
                   </TableCell>
@@ -81,8 +92,8 @@ export function BreakdownTable({ data, title, maxVisibleRows = 10 }: BreakdownTa
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
-        </ScrollArea>
+          </table>
+        </div>
       </div>
     </div>
   );
