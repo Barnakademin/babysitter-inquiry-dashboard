@@ -189,12 +189,15 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 <h4 className="text-sm font-semibold text-foreground">Yearly & Monthly Overview</h4>
                 {yearlyStats.map((y) => (
                   <div key={y.year} className="space-y-2">
-                    <Card className="bg-primary/5 border-primary/20">
+                    <Card 
+                      className={`bg-primary/5 border-primary/20 cursor-pointer transition-all hover:bg-primary/10 ${selectedMonth === `year-${y.year}` ? 'ring-2 ring-primary' : ''}`}
+                      onClick={() => setSelectedMonth(`year-${y.year}`)}
+                    >
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-semibold text-lg">{y.year}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {y.stats.total} inquiries
+                          <span className="text-xs text-muted-foreground">
+                            Click to view full year
                           </span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
