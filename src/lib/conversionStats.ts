@@ -214,9 +214,6 @@ export function getBreakdownByFormLanguage(inquiries: ClientInquiry[]): Breakdow
   const labelMap: Record<string, string> = {
     'sv': 'Swedish',
     'en': 'English',
-    'de': 'German',
-    'fr': 'French',
-    'es': 'Spanish',
   };
   
   return formLanguages.map((lang) => {
