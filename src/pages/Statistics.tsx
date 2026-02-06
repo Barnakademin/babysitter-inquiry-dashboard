@@ -1,5 +1,6 @@
 import { mockInquiries } from "@/data/mockInquiries";
 import { ConversionStatistics } from "@/components/dashboard/ConversionStatistics";
+import { InquiryTimingDistribution } from "@/components/dashboard/InquiryTimingDistribution";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,8 @@ const Statistics = () => {
             </p>
           </div>
         </div>
+
+        <InquiryTimingDistribution inquiries={mockInquiries} />
 
         <ConversionStatistics inquiries={mockInquiries} />
       </div>
