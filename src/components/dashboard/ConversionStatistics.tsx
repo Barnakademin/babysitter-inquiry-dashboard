@@ -38,6 +38,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { TimeToConvertDistribution } from "./TimeToConvertDistribution";
 
 interface ConversionStatisticsProps {
   inquiries: ClientInquiry[];
@@ -269,6 +270,9 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 ))}
               </div>
             )}
+
+            {/* Time-to-Convert Distribution */}
+            <TimeToConvertDistribution inquiries={filteredInquiries} />
 
             {/* Breakdown Tabs */}
             <Tabs defaultValue="city" className="w-full">
