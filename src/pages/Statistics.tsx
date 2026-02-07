@@ -23,9 +23,9 @@ const Statistics = () => {
           </div>
         </div>
 
-        <InquiryTimingDistribution inquiries={mockInquiries} />
-
         <ConversionStatistics inquiries={mockInquiries} />
+
+        <InquiryTimingDistribution inquiries={mockInquiries} />
       </div>
     </div>
   );
