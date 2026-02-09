@@ -1,4 +1,4 @@
-import { getApiBaseUrlStatic } from "@/utils/apiConfig";
+import { getApiBaseUrlStatic, getApiActionUrlStatic } from "@/utils/apiConfig";
 
 export interface ClientInquiry {
   id: string;
@@ -102,6 +102,28 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
     });
   } catch (error) {
     console.error("Error fetching clients data:", error);
+    throw error;
+  }
+};
+
+/**
+ * Удаляет клиента через API /react/delete-client
+ */
+export const deleteClient = async (clientId: string): Promise<void> => {
+  try {
+    const API_BASE_URL = getApiActionUrlStatic();
+    const url = `${API_BASE_URL}/react/delete-client?id=${clientId}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete client: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error("Error deleting client:", error);
     throw error;
   }
 };

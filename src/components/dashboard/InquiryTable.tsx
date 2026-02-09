@@ -3,7 +3,8 @@ import { format } from "date-fns";
 import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteClient } from "@/services/api";
 import {
   Table,
   TableBody,
@@ -83,6 +84,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<ClientInquiry | null>(null);
   const [historyClient, setHistoryClient] = useState<ClientInquiry | null>(null);
+  const queryClient = useQueryClient();
 
   const { data: historyData = [] } = useQuery({
     queryKey: ['history'],
@@ -104,10 +106,15 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
     setDeleteDialogOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (clientToDelete) {
-      // TODO: Implement actual delete logic here
-      toast.success(`Client "${clientToDelete.name}" deleted`);
+      try {
+        await deleteClient(clientToDelete.id);
+        toast.success(`Client "${clientToDelete.name}" deleted`);
+        queryClient.invalidateQueries({ queryKey: ['clients-full'] });
+      } catch (error) {
+        toast.error(`Failed to delete client: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
     }
     setDeleteDialogOpen(false);
     setClientToDelete(null);
@@ -232,12 +239,18 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-muted-foreground hover:text-primary"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // TODO: Implement edit functionality
-                        }}
+                        asChild
                       >
-                        <Wrench className="h-4 w-4" />
+                        <a
+                          href={`/add/edit?id=${inquiry.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          <Wrench className="h-4 w-4" />
+                        </a>
                       </Button>
                       <Button
                         variant="ghost"
