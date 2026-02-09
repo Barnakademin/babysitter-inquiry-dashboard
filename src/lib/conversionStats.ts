@@ -1,4 +1,4 @@
-import { ClientInquiry } from "@/data/mockInquiries";
+import { ClientInquiry } from "../data/mockInquiries";
 import { differenceInDays, format, startOfMonth } from "date-fns";
 
 // Stage meanings:

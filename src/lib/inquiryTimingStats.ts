@@ -1,4 +1,4 @@
-import { ClientInquiry } from "@/data/mockInquiries";
+import { ClientInquiry } from "../data/mockInquiries";
 
 export interface TimingDistributionItem {
   label: string;

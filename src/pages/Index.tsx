@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { mockInquiries, ClientInquiry } from "@/data/mockInquiries";
+import { useQuery } from "@tanstack/react-query";
+import { ClientInquiry, fetchClientsFull } from "@/services/api";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { SearchBar } from "@/components/dashboard/SearchBar";
 import { FilterBar } from "@/components/dashboard/FilterBar";
@@ -7,12 +8,19 @@ import { InquiryTable } from "@/components/dashboard/InquiryTable";
 import { Pagination } from "@/components/dashboard/Pagination";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Loader2 } from "lucide-react";
 const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
 const Index = () => {
+  const { data: inquiries = [], isLoading, error } = useQuery({
+    queryKey: ['clients-full'],
+    queryFn: fetchClientsFull,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     city: "",
@@ -42,7 +50,7 @@ const Index = () => {
   };
 
   const filteredAndSortedData = useMemo(() => {
-    let result = [...mockInquiries];
+    let result = [...inquiries];
 
     // Search filter
     if (searchQuery) {
@@ -92,7 +100,7 @@ const Index = () => {
     }
 
     return result;
-  }, [searchQuery, filters, sortConfig]);
+  }, [inquiries, searchQuery, filters, sortConfig]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedData.length / ITEMS_PER_PAGE);
@@ -101,10 +109,37 @@ const Index = () => {
     currentPage * ITEMS_PER_PAGE
   );
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading clients data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h3 className="text-lg font-semibold text-foreground mb-1">Error loading data</h3>
+          <p className="text-muted-foreground text-sm">
+            {error instanceof Error ? error.message : 'Failed to load clients data'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-8 space-y-6">
-        <DashboardHeader totalInquiries={mockInquiries.length} />
+        <DashboardHeader totalInquiries={inquiries.length} />
 
         <Button variant="outline" asChild className="gap-2">
           <Link to="/statistics">
