@@ -14,7 +14,7 @@ interface BreakdownTableProps {
   maxVisibleRows?: number;
 }
 
-export function BreakdownTable({ data, title, maxVisibleRows = 10 }: BreakdownTableProps) {
+export function BreakdownTable({ data, title, maxVisibleRows = 1000 }: BreakdownTableProps) {
   const hasMoreRows = data.length > maxVisibleRows;
 
   // Fixed-height container is required so the internal scroller engages and the page doesn't grow.
