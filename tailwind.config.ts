@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
+  important: 'body',
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -9,7 +10,7 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "2400px",
       },
     },
     extend: {
@@ -72,6 +73,19 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        bb: {
+          1: "hsl(var(--bb-1))",
+          2: "hsl(var(--bb-2))",
+          3: "hsl(var(--bb-3))",
+        },
+        kb: {
+          1: "hsl(var(--kb-1))",
+          2: "hsl(var(--kb-2))",
+          3: "hsl(var(--kb-3))",
+        },
+        obundet: "hsl(var(--obundet))",
+        fulltime: "hsl(var(--fulltime))",
+        special: "hsl(var(--special))",
       },
       borderRadius: {
         lg: "var(--radius)",

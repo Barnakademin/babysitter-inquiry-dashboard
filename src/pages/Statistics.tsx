@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 const Statistics = () => {
   return (
     <div className="min-h-screen bg-background">
-      <div className="container py-8 space-y-6">
+      <div className="py-8 px-6 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link to="/">

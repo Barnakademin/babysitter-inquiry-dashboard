@@ -138,7 +138,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container py-8 space-y-6">
+      <div className="py-8 px-6 space-y-6">
         <DashboardHeader totalInquiries={inquiries.length} />
 
         <Button variant="outline" asChild className="gap-2">
