@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy, History } from "lucide-react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -79,7 +80,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<ClientInquiry | null>(null);
-  const [historyClient, setHistoryClient] = useState<ClientInquiry | null>(null);
+  
 
   const toggleRow = (id: string) => {
     setExpandedRow(expandedRow === id ? null : id);
@@ -146,16 +147,20 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setHistoryClient(inquiry);
-                        }}
-                        className="p-0.5 rounded hover:bg-muted transition-colors"
-                        title="View history"
-                      >
-                        <History className="w-4 h-4 text-muted-foreground hover:text-primary" />
-                      </button>
+                      <HoverCard openDelay={200} closeDelay={100}>
+                        <HoverCardTrigger asChild>
+                          <button
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-0.5 rounded hover:bg-muted transition-colors"
+                          >
+                            <History className="w-4 h-4 text-muted-foreground hover:text-primary" />
+                          </button>
+                        </HoverCardTrigger>
+                        <HoverCardContent align="start" className="w-64">
+                          <div className="font-semibold text-sm mb-2">History — {inquiry.name}</div>
+                          <p className="text-xs text-muted-foreground">No history entries yet.</p>
+                        </HoverCardContent>
+                      </HoverCard>
                       <span className="font-semibold text-foreground">{inquiry.name}</span>
                     </div>
                   </TableCell>
@@ -314,19 +319,6 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <Dialog open={!!historyClient} onOpenChange={(open) => !open && setHistoryClient(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>History — {historyClient?.name}</DialogTitle>
-            <DialogDescription>
-              Client history will be displayed here.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4 text-sm text-muted-foreground text-center">
-            No history entries yet.
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
