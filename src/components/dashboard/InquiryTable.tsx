@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
@@ -33,6 +34,8 @@ import { ServiceBadge } from "./ServiceBadge";
 import { LanguageBadge } from "./LanguageBadge";
 import { FormLanguageFlag } from "./FormLanguageFlag";
 import { PromoBadge } from "./PromoBadge";
+import { fetchHistory, fetchConnections } from "@/api/history";
+import { ClientHistoryView } from "@/components/ClientHistoryView";
 
 interface InquiryTableProps {
   data: ClientInquiry[];
@@ -80,6 +83,16 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<ClientInquiry | null>(null);
   const [historyClient, setHistoryClient] = useState<ClientInquiry | null>(null);
+
+  const { data: historyData = [] } = useQuery({
+    queryKey: ['history'],
+    queryFn: fetchHistory
+  });
+
+  const { data: connectionsData = [] } = useQuery({
+    queryKey: ['connections'],
+    queryFn: fetchConnections
+  });
 
   const toggleRow = (id: string) => {
     setExpandedRow(expandedRow === id ? null : id);
@@ -315,15 +328,21 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
       </AlertDialog>
 
       <Dialog open={!!historyClient} onOpenChange={(open) => !open && setHistoryClient(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>History — {historyClient?.name}</DialogTitle>
             <DialogDescription>
-              Client history will be displayed here.
+              Client history timeline
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4 text-sm text-muted-foreground text-center">
-            No history entries yet.
+          <div className="py-4">
+            {historyClient && (
+              <ClientHistoryView 
+                clientId={parseInt(historyClient.id)} 
+                history={historyData} 
+                connections={connectionsData}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>
