@@ -25,10 +25,18 @@ const Index = () => {
   const [filters, setFilters] = useState({
     city: "",
     service: "",
-    formLanguage: "",
+    language: "",
   });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "createdAt", direction: "desc" });
   const [currentPage, setCurrentPage] = useState(1);
+
+  const allLanguages = useMemo(() => {
+    return [...new Set(inquiries.flatMap((i) => i.languages))].sort();
+  }, [inquiries]);
+
+  const allCities = useMemo(() => {
+    return [...new Set(inquiries.map((i) => i.city).filter(Boolean))].sort();
+  }, [inquiries]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
@@ -36,7 +44,7 @@ const Index = () => {
   };
 
   const clearFilters = () => {
-    setFilters({ city: "", service: "", formLanguage: "" });
+    setFilters({ city: "", service: "", language: "" });
     setCurrentPage(1);
   };
 
@@ -71,8 +79,8 @@ const Index = () => {
     if (filters.service) {
       result = result.filter((inquiry) => inquiry.service === filters.service);
     }
-    if (filters.formLanguage) {
-      result = result.filter((inquiry) => inquiry.formLanguage === filters.formLanguage);
+    if (filters.language) {
+      result = result.filter((inquiry) => inquiry.languages.includes(filters.language));
     }
 
     // Sort
@@ -138,7 +146,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="py-8 px-6 space-y-6">
+      <div className="container py-8 space-y-6">
         <DashboardHeader totalInquiries={inquiries.length} />
 
         <Button variant="outline" asChild className="gap-2">
@@ -154,6 +162,8 @@ const Index = () => {
             filters={filters}
             onFilterChange={handleFilterChange}
             onClearFilters={clearFilters}
+            allLanguages={allLanguages}
+            allCities={allCities}
           />
         </div>
 

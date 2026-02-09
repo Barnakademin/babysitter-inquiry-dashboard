@@ -7,16 +7,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cities, services, formLanguages } from "@/data/mockInquiries";
+import { services } from "@/data/mockInquiries";
 
 interface FilterBarProps {
   filters: {
     city: string;
     service: string;
-    formLanguage: string;
+    language: string;
   };
   onFilterChange: (key: string, value: string) => void;
   onClearFilters: () => void;
+  allLanguages: string[];
+  allCities: string[];
 }
 
 const serviceLabels: Record<string, string> = {
@@ -24,16 +26,8 @@ const serviceLabels: Record<string, string> = {
   nanny: "KB",
 };
 
-const languageLabels: Record<string, string> = {
-  sv: "Swedish",
-  en: "English",
-  de: "German",
-  fr: "French",
-  es: "Spanish",
-};
-
-export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBarProps) {
-  const hasActiveFilters = filters.city || filters.service || filters.formLanguage;
+export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguages, allCities }: FilterBarProps) {
+  const hasActiveFilters = filters.city || filters.service || filters.language;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -48,7 +42,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Cities</SelectItem>
-          {cities.map((city) => (
+          {allCities.map((city) => (
             <SelectItem key={city} value={city}>
               {city}
             </SelectItem>
@@ -70,15 +64,15 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
         </SelectContent>
       </Select>
 
-      <Select value={filters.formLanguage} onValueChange={(v) => onFilterChange("formLanguage", v)}>
+      <Select value={filters.language} onValueChange={(v) => onFilterChange("language", v)}>
         <SelectTrigger className="w-[160px] bg-card">
           <SelectValue placeholder="All Languages" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Languages</SelectItem>
-          {formLanguages.map((lang) => (
+          {allLanguages.map((lang) => (
             <SelectItem key={lang} value={lang}>
-              {languageLabels[lang]}
+              {lang}
             </SelectItem>
           ))}
         </SelectContent>
