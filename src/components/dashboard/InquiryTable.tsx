@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -11,6 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -72,6 +79,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<ClientInquiry | null>(null);
+  const [historyClient, setHistoryClient] = useState<ClientInquiry | null>(null);
 
   const toggleRow = (id: string) => {
     setExpandedRow(expandedRow === id ? null : id);
@@ -137,7 +145,19 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                     {inquiry.id}
                   </TableCell>
                   <TableCell>
-                    <div className="font-semibold text-foreground">{inquiry.name}</div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setHistoryClient(inquiry);
+                        }}
+                        className="p-0.5 rounded hover:bg-muted transition-colors"
+                        title="View history"
+                      >
+                        <History className="w-4 h-4 text-muted-foreground hover:text-primary" />
+                      </button>
+                      <span className="font-semibold text-foreground">{inquiry.name}</span>
+                    </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5 text-sm">
@@ -293,6 +313,20 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={!!historyClient} onOpenChange={(open) => !open && setHistoryClient(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>History — {historyClient?.name}</DialogTitle>
+            <DialogDescription>
+              Client history will be displayed here.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 text-sm text-muted-foreground text-center">
+            No history entries yet.
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
