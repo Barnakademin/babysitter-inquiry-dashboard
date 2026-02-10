@@ -64,7 +64,7 @@ function DistributionBars({
 export function InquiryTimingDistribution({
   inquiries,
 }: InquiryTimingDistributionProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("all");
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(`year-${new Date().getFullYear()}`);
 
   const availableYears = useMemo(() => getAvailableYears(inquiries), [inquiries]);
 

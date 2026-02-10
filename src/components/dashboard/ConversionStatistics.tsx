@@ -45,7 +45,7 @@ interface ConversionStatisticsProps {
 }
 
 export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
-  const [selectedMonth, setSelectedMonth] = useState<string>("all");
+  const [selectedMonth, setSelectedMonth] = useState<string>(`year-${new Date().getFullYear()}`);
   const [isOpen, setIsOpen] = useState(true);
 
   // All yearly stats for the period selector dropdown
