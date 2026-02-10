@@ -278,13 +278,12 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
 
             {/* Breakdown Tabs */}
             <Tabs defaultValue="city" className="w-full">
-              <TabsList className="grid w-full grid-cols-8 max-w-4xl">
+              <TabsList className="grid w-full grid-cols-7 max-w-3xl">
                 <TabsTrigger value="city">Location</TabsTrigger>
                 <TabsTrigger value="language">Language</TabsTrigger>
                 <TabsTrigger value="kids">Children</TabsTrigger>
                 <TabsTrigger value="helpType">Help Type</TabsTrigger>
                 <TabsTrigger value="frequency">Frequency</TabsTrigger>
-                <TabsTrigger value="nannyPref">Nanny Pref</TabsTrigger>
                 <TabsTrigger value="service">Service</TabsTrigger>
                 <TabsTrigger value="formLang">Form Lang</TabsTrigger>
               </TabsList>
@@ -302,9 +301,6 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               </TabsContent>
               <TabsContent value="frequency" className="mt-4">
                 <BreakdownTable data={breakdownByFrequency} title="By Frequency" />
-              </TabsContent>
-              <TabsContent value="nannyPref" className="mt-4">
-                <BreakdownTable data={breakdownByNannyPref} title="By Nanny Language Preference" />
               </TabsContent>
               <TabsContent value="service" className="mt-4">
                 <BreakdownTable data={breakdownByService} title="By Service" />
