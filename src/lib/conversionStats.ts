@@ -208,6 +208,30 @@ export function getBreakdownByNannyLanguagePreference(inquiries: ClientInquiry[]
   }).sort((a, b) => b.total - a.total);
 }
 
+export function getBreakdownByService(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const services = [...new Set(inquiries.map((i) => i.service))];
+  
+  const labelMap: Record<string, string> = {
+    'babysitting': 'BB (Babysitting)',
+    'nanny': 'KB (Nanny)',
+  };
+  
+  return services.map((service) => {
+    const serviceInquiries = inquiries.filter((i) => i.service === service);
+    const stats = calculateConversionStats(serviceInquiries);
+    
+    return {
+      label: labelMap[service] || service,
+      total: stats.total,
+      converted: stats.converted,
+      notConverted: stats.notConverted,
+      inProgress: stats.inProgress,
+      conversionRate: stats.conversionRate,
+      avgDaysToConvert: stats.avgDaysToConvert,
+    };
+  }).sort((a, b) => b.total - a.total);
+}
+
 export function getBreakdownByFormLanguage(inquiries: ClientInquiry[]): BreakdownItem[] {
   const formLanguages = [...new Set(inquiries.map((i) => i.formLanguage))];
   
