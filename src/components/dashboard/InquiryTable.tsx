@@ -42,6 +42,8 @@ interface InquiryTableProps {
   data: ClientInquiry[];
   sortConfig: { key: string; direction: "asc" | "desc" } | null;
   onSort: (key: string) => void;
+  currentPage?: number;
+  itemsPerPage?: number;
 }
 
 function SortIcon({ columnKey, sortConfig }: { columnKey: string; sortConfig: { key: string; direction: "asc" | "desc" } | null }) {
@@ -79,7 +81,7 @@ function SortableHeader({
   );
 }
 
-export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
+export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsPerPage = 100 }: InquiryTableProps) {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<ClientInquiry | null>(null);
@@ -127,6 +129,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
           <TableHeader>
             <TableRow className="bg-muted/30 hover:bg-muted/30">
               <TableHead className="w-8"></TableHead>
+              <TableHead className="w-10 text-center">N</TableHead>
               <SortableHeader columnKey="id" sortConfig={sortConfig} onSort={onSort}>ID</SortableHeader>
               <SortableHeader columnKey="name" sortConfig={sortConfig} onSort={onSort}>Name</SortableHeader>
               <SortableHeader columnKey="city" sortConfig={sortConfig} onSort={onSort}>Location</SortableHeader>
@@ -147,7 +150,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((inquiry) => (
+            {data.map((inquiry, index) => (
               <>
                 <TableRow 
                   key={inquiry.id} 
@@ -160,6 +163,9 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                         expandedRow === inquiry.id ? "rotate-90" : ""
                       }`} 
                     />
+                  </TableCell>
+                  <TableCell className="w-10 text-center text-muted-foreground font-medium">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
                   </TableCell>
                   <TableCell className="font-mono text-sm text-muted-foreground">
                     {inquiry.id}
@@ -265,7 +271,7 @@ export function InquiryTable({ data, sortConfig, onSort }: InquiryTableProps) {
                 </TableRow>
                 {expandedRow === inquiry.id && (
                   <TableRow key={`${inquiry.id}-expanded`} className="bg-muted/20 animate-fade-in">
-                    <TableCell colSpan={14} className="p-0">
+                    <TableCell colSpan={15} className="p-0">
                       <div className="p-4 space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="flex items-center gap-2 text-sm">

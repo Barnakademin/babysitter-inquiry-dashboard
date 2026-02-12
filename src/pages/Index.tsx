@@ -179,7 +179,13 @@ const Index = () => {
           </div>
         ) : (
           <>
-            <InquiryTable data={paginatedData} sortConfig={sortConfig} onSort={handleSort} />
+            <InquiryTable
+              data={paginatedData}
+              sortConfig={sortConfig}
+              onSort={handleSort}
+              currentPage={currentPage}
+              itemsPerPage={ITEMS_PER_PAGE}
+            />
             
             {totalPages > 1 && (
               <Pagination
