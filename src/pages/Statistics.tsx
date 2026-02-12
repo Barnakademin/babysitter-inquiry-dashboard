@@ -1,10 +1,30 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchClientsFull } from "@/services/api";
+import { fetchClientsFull, type ClientInquiry } from "@/services/api";
+import { fetchHistory } from "@/api/history";
 import { ConversionStatistics } from "@/components/dashboard/ConversionStatistics";
 import { InquiryTimingDistribution } from "@/components/dashboard/InquiryTimingDistribution";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+
+function buildStage7FromHistory(history: { client_id: number; stage: string; date: string }[]) {
+  const byClient = new Map<string, { everReachedStage7: boolean; firstStage7Date: Date }>();
+  for (const row of history) {
+    const stageNum = Number(row.stage);
+    if (stageNum !== 7) continue;
+    const clientKey = String(row.client_id);
+    const date = row.date ? new Date(row.date) : null;
+    if (!date || isNaN(date.getTime())) continue;
+    const existing = byClient.get(clientKey);
+    if (!existing || date < existing.firstStage7Date) {
+      byClient.set(clientKey, { everReachedStage7: true, firstStage7Date: date });
+    } else if (!existing.everReachedStage7) {
+      byClient.set(clientKey, { ...existing, everReachedStage7: true });
+    }
+  }
+  return byClient;
+}
 
 const Statistics = () => {
   const { data: inquiries = [], isLoading, error } = useQuery({
@@ -13,6 +33,31 @@ const Statistics = () => {
     refetchOnWindowFocus: false,
     retry: 1,
   });
+
+  const { data: history = [] } = useQuery({
+    queryKey: ['get-history'],
+    queryFn: fetchHistory,
+    refetchOnWindowFocus: false,
+    retry: 1,
+    staleTime: 60_000,
+  });
+
+  const enrichedInquiries = useMemo((): ClientInquiry[] => {
+    const stage7Map = buildStage7FromHistory(history);
+    return inquiries.map((inv) => {
+      const fromHistory = stage7Map.get(inv.id);
+      const everReachedStage7 = (inv.stage === 7 || inv.everReachedStage7 || fromHistory?.everReachedStage7) ?? false;
+      const firstStage7Date =
+        inv.stage === 7
+          ? inv.stageDate
+          : (inv.firstStage7Date ?? fromHistory?.firstStage7Date ?? undefined);
+      return {
+        ...inv,
+        everReachedStage7: everReachedStage7 ? true : undefined,
+        firstStage7Date: firstStage7Date ?? undefined,
+      };
+    });
+  }, [inquiries, history]);
 
   if (isLoading) {
     return (
@@ -58,9 +103,9 @@ const Statistics = () => {
           </div>
         </div>
 
-        <ConversionStatistics inquiries={inquiries} />
+        <ConversionStatistics inquiries={enrichedInquiries} />
 
-        <InquiryTimingDistribution inquiries={inquiries} />
+        <InquiryTimingDistribution inquiries={enrichedInquiries} />
       </div>
     </div>
   );

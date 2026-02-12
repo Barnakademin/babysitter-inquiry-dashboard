@@ -17,6 +17,10 @@ export interface ClientInquiry {
   stageDate: Date;
   createdAt: Date;
   nannyLanguagePreference: 'swedish-speaking' | 'bilingual';
+  /** Если клиент когда-либо был в стадии 7 — в статистике считается конвертированным даже после перехода в другую стадию */
+  everReachedStage7?: boolean;
+  /** Дата первого перехода в стадию 7 (для расчёта дней до конверсии, если клиент потом ушёл из 7) */
+  firstStage7Date?: Date;
 }
 
 export const mockInquiries: ClientInquiry[] = [

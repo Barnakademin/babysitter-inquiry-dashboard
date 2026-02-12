@@ -19,6 +19,8 @@ export interface ClientInquiry {
   stageDate: Date;
   createdAt: Date;
   nannyLanguagePreference: 'swedish-speaking' | 'bilingual';
+  everReachedStage7?: boolean;
+  firstStage7Date?: Date;
 }
 
 /**
@@ -98,6 +100,8 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
           ? new Date(client.client_added)
           : new Date(),
         nannyLanguagePreference: 'swedish-speaking',
+        everReachedStage7: client.ever_reached_stage_7 === true || client.ever_reached_stage_7 === 1 ? true : undefined,
+        firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
       };
     });
   } catch (error) {

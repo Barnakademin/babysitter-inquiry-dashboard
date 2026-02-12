@@ -1,5 +1,5 @@
 import { ClientInquiry } from "@/data/mockInquiries";
-import { getDaysToConvert } from "./conversionStats";
+import { getDaysToConvert, getConversionStatus } from "./conversionStats";
 
 export interface DistributionRange {
   label: string;
@@ -19,9 +19,9 @@ const RANGES = [
 
 export function getTimeToConvertDistribution(inquiries: ClientInquiry[]): DistributionRange[] {
   const convertedWithDays = inquiries
-    .filter((i) => i.stage === 7)
-    .map((i) => getDaysToConvert(i)!)
-    .filter((d) => d !== null);
+    .filter((i) => getConversionStatus(i) === "converted")
+    .map((i) => getDaysToConvert(i))
+    .filter((d): d is number => d !== null);
 
   const totalConverted = convertedWithDays.length;
 
