@@ -30,6 +30,12 @@ function getApiBaseUrl(): string {
   return getApiBaseUrlStatic();
 }
 
+/** Парсит datetime из API (MySQL "Y-m-d H:i:s") в формат, корректно обрабатываемый JS по локальному времени */
+function parseDateTime(value: string): string {
+  if (!value) return value;
+  return value.replace(' ', 'T');
+}
+
 /**
  * Загружает данные клиентов из API /json/clients-full
  */
@@ -95,9 +101,9 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         stage: Number(client.client_stage_ui || client.client_stage || 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
         stageDate: client.client_added_stage && client.client_added_stage !== '0000-00-00' 
           ? new Date(client.client_added_stage) 
-          : (client.client_added ? new Date(client.client_added) : new Date()),
+          : (client.client_added ? new Date(parseDateTime(client.client_added)) : new Date()),
         createdAt: client.client_added && client.client_added !== '0000-00-00'
-          ? new Date(client.client_added)
+          ? new Date(parseDateTime(client.client_added))
           : new Date(),
         nannyLanguagePreference: 'swedish-speaking',
         everReachedStage7: client.ever_reached_stage_7 === true || client.ever_reached_stage_7 === 1 ? true : undefined,
