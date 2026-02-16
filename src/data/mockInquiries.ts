@@ -13,7 +13,7 @@ export interface ClientInquiry {
   formLanguage: 'sv' | 'en';
   promoCode: string | null;
   comment: string;
-  stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  stage: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   stageDate: Date;
   createdAt: Date;
   nannyLanguagePreference: 'swedish-speaking' | 'bilingual';

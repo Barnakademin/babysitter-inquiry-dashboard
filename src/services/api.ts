@@ -15,7 +15,7 @@ export interface ClientInquiry {
   formLanguage: 'sv' | 'en';
   promoCode: string | null;
   comment: string;
-  stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  stage: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   stageDate: Date;
   createdAt: Date;
   nannyLanguagePreference: 'swedish-speaking' | 'bilingual';
@@ -98,7 +98,11 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         formLanguage: client.client_client_lang === 1 ? 'en' : 'sv',
         promoCode: client.promo_code || null,
         comment: stripHtml(client.client_form_comment || client.client_notes || ''),
-        stage: Number(client.client_stage_ui || client.client_stage || 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+        stage: Number(
+          client.client_stage_ui !== undefined && client.client_stage_ui !== null
+            ? client.client_stage_ui
+            : (client.client_stage != null ? (client.client_stage as number) - 1 : 0)
+        ) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
         stageDate: client.client_added_stage && client.client_added_stage !== '0000-00-00' 
           ? new Date(client.client_added_stage) 
           : (client.client_added ? new Date(parseDateTime(client.client_added)) : new Date()),
