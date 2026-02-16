@@ -90,7 +90,7 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         phone: client.client_phone || client.phone || '',
         address: client.client_address || client.address || '',
         city: client.client_location || client.city || '',
-        service: client.client_service === 1 ? 'nanny' : 'babysitting',
+        service: client.client_service === 0 ? 'nanny' : 'babysitting',
         languages: languages,
         needHelpWith: helpTitles.join(', '),
         howOften: client.schedule?.title || '',
