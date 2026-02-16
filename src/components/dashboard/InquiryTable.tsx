@@ -130,7 +130,6 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
             <TableRow className="bg-muted/30 hover:bg-muted/30">
               <TableHead className="w-8"></TableHead>
               <TableHead className="w-10 text-center">N</TableHead>
-              <SortableHeader columnKey="id" sortConfig={sortConfig} onSort={onSort}>ID</SortableHeader>
               <SortableHeader columnKey="name" sortConfig={sortConfig} onSort={onSort}>Name</SortableHeader>
               <SortableHeader columnKey="city" sortConfig={sortConfig} onSort={onSort}>Location</SortableHeader>
               <SortableHeader columnKey="service" sortConfig={sortConfig} onSort={onSort}>Service</SortableHeader>
@@ -166,9 +165,6 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                   </TableCell>
                   <TableCell className="w-10 text-center text-muted-foreground font-medium">
                     {(currentPage - 1) * itemsPerPage + index + 1}
-                  </TableCell>
-                  <TableCell className="font-mono text-sm text-muted-foreground">
-                    {inquiry.id}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -271,7 +267,7 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                 </TableRow>
                 {expandedRow === inquiry.id && (
                   <TableRow key={`${inquiry.id}-expanded`} className="bg-muted/20 animate-fade-in">
-                    <TableCell colSpan={15} className="p-0">
+                    <TableCell colSpan={14} className="p-0">
                       <div className="p-4 space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="flex items-center gap-2 text-sm">
