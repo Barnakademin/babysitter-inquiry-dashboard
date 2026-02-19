@@ -178,7 +178,27 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                       >
                         <History className="w-4 h-4 text-muted-foreground hover:text-primary" />
                       </button>
-                      <span className="font-semibold text-foreground">{inquiry.name}</span>
+                      <a
+                        href={`/add/edit?id=${inquiry.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="font-semibold text-foreground hover:text-primary hover:underline"
+                      >
+                        {inquiry.name}
+                      </a>
+                      {inquiry.breezy && (
+                        <a
+                          href={inquiry.breezy}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center justify-center min-w-[28px] h-6 px-1.5 rounded bg-muted text-muted-foreground text-sm font-semibold hover:bg-muted/80 hover:text-foreground transition-colors"
+                          title="Breezy (open in new tab)"
+                        >
+                          B
+                        </a>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>

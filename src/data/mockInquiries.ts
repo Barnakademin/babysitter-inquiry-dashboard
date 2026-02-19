@@ -21,6 +21,7 @@ export interface ClientInquiry {
   everReachedStage7?: boolean;
   /** Дата первого перехода в стадию 7 (для расчёта дней до конверсии, если клиент потом ушёл из 7) */
   firstStage7Date?: Date;
+  breezy?: string;
 }
 
 export const mockInquiries: ClientInquiry[] = [
