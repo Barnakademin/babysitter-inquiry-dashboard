@@ -168,6 +168,11 @@ export function getBreakdownByHelpType(inquiries: ClientInquiry[]): BreakdownIte
   }).sort((a, b) => b.total - a.total);
 }
 
+function getFrequencyOrder(label: string): number {
+  const match = label.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : 999;
+}
+
 export function getBreakdownByFrequency(inquiries: ClientInquiry[]): BreakdownItem[] {
   const frequencies = [...new Set(inquiries.map((i) => i.howOften))];
   
@@ -184,7 +189,7 @@ export function getBreakdownByFrequency(inquiries: ClientInquiry[]): BreakdownIt
       conversionRate: stats.conversionRate,
       avgDaysToConvert: stats.avgDaysToConvert,
     };
-  }).sort((a, b) => b.total - a.total);
+  }).sort((a, b) => getFrequencyOrder(a.label) - getFrequencyOrder(b.label));
 }
 
 export function getBreakdownByNannyLanguagePreference(inquiries: ClientInquiry[]): BreakdownItem[] {
