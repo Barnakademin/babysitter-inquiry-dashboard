@@ -96,14 +96,15 @@ export function InquiryTimingDistribution({
   }, [availableYears, selectedPeriod]);
 
   const byDayOfWeek = useMemo(
-    () => getInquiriesByDayOfWeek(inquiriesWithKnownTime),
-    [inquiriesWithKnownTime]
+    () => getInquiriesByDayOfWeek(filteredInquiries),
+    [filteredInquiries]
   );
   const byTimeOfDay = useMemo(
     () => getInquiriesByTimeOfDay(inquiriesWithKnownTime),
     [inquiriesWithKnownTime]
   );
-  const total = inquiriesWithKnownTime.length;
+  const totalAll = filteredInquiries.length;
+  const totalWithTime = inquiriesWithKnownTime.length;
 
   return (
     <Card>
@@ -134,7 +135,7 @@ export function InquiryTimingDistribution({
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-xs text-muted-foreground tabular-nums">
-              {total} {total === 1 ? "inquiry" : "inquiries"}
+              {totalAll} {totalAll === 1 ? "inquiry" : "inquiries"}
             </span>
             <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
               <SelectTrigger className="w-[160px] h-8 text-xs">
@@ -169,10 +170,10 @@ export function InquiryTimingDistribution({
             </TabsTrigger>
           </TabsList>
           <TabsContent value="day">
-            <DistributionBars data={byDayOfWeek} total={total} />
+            <DistributionBars data={byDayOfWeek} total={totalAll} />
           </TabsContent>
           <TabsContent value="time">
-            <DistributionBars data={byTimeOfDay} total={total} />
+            <DistributionBars data={byTimeOfDay} total={totalWithTime} />
           </TabsContent>
           <TabsContent value="heatmap">
             <TimingHeatmap inquiries={inquiriesWithKnownTime} />

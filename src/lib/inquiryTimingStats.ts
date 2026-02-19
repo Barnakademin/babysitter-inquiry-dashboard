@@ -46,11 +46,10 @@ export function filterInquiriesWithKnownTime(inquiries: ClientInquiry[]): Client
 }
 
 export function getInquiriesByDayOfWeek(inquiries: ClientInquiry[]): TimingDistributionItem[] {
-  const withTime = filterInquiriesWithKnownTime(inquiries);
-  const total = withTime.length;
+  const total = inquiries.length;
   const counts = new Array(7).fill(0);
 
-  for (const inquiry of withTime) {
+  for (const inquiry of inquiries) {
     counts[inquiry.createdAt.getDay()]++;
   }
 
