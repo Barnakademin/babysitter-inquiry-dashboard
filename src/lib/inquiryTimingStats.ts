@@ -36,11 +36,21 @@ const TIME_RANGES = [
 // Monday-first ordering
 const MONDAY_FIRST = [1, 2, 3, 4, 5, 6, 0];
 
+export function hasKnownTime(inquiry: ClientInquiry): boolean {
+  const d = inquiry.createdAt;
+  return d.getHours() !== 0 || d.getMinutes() !== 0;
+}
+
+export function filterInquiriesWithKnownTime(inquiries: ClientInquiry[]): ClientInquiry[] {
+  return inquiries.filter(hasKnownTime);
+}
+
 export function getInquiriesByDayOfWeek(inquiries: ClientInquiry[]): TimingDistributionItem[] {
-  const total = inquiries.length;
+  const withTime = filterInquiriesWithKnownTime(inquiries);
+  const total = withTime.length;
   const counts = new Array(7).fill(0);
 
-  for (const inquiry of inquiries) {
+  for (const inquiry of withTime) {
     counts[inquiry.createdAt.getDay()]++;
   }
 
@@ -52,10 +62,11 @@ export function getInquiriesByDayOfWeek(inquiries: ClientInquiry[]): TimingDistr
 }
 
 export function getInquiriesByTimeOfDay(inquiries: ClientInquiry[]): TimingDistributionItem[] {
-  const total = inquiries.length;
+  const withTime = filterInquiriesWithKnownTime(inquiries);
+  const total = withTime.length;
 
   return TIME_RANGES.map((range) => {
-    const count = inquiries.filter((i) => {
+    const count = withTime.filter((i) => {
       const hour = i.createdAt.getHours();
       return hour >= range.min && hour <= range.max;
     }).length;
@@ -74,11 +85,11 @@ export function getHeatmapData(inquiries: ClientInquiry[]): {
   timeRanges: string[];
   maxCount: number;
 } {
-  const total = inquiries.length;
-  // 7 days × 7 time ranges
+  const withTime = filterInquiriesWithKnownTime(inquiries);
+  const total = withTime.length;
   const grid: number[][] = MONDAY_FIRST.map(() => new Array(TIME_RANGES.length).fill(0));
 
-  for (const inquiry of inquiries) {
+  for (const inquiry of withTime) {
     const dayOfWeek = inquiry.createdAt.getDay();
     const hour = inquiry.createdAt.getHours();
     const dayIdx = MONDAY_FIRST.indexOf(dayOfWeek);

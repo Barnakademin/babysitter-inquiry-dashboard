@@ -4,6 +4,7 @@ import {
   getInquiriesByDayOfWeek,
   getInquiriesByTimeOfDay,
   getAvailableYears,
+  filterInquiriesWithKnownTime,
 } from "@/lib/inquiryTimingStats";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,6 +81,11 @@ export function InquiryTimingDistribution({
     });
   }, [inquiries, selectedPeriod]);
 
+  const inquiriesWithKnownTime = useMemo(
+    () => filterInquiriesWithKnownTime(filteredInquiries),
+    [filteredInquiries]
+  );
+
   const selectedPeriodLabel = useMemo(() => {
     if (selectedPeriod === "all") return "All time";
     if (selectedPeriod.startsWith("year-")) return selectedPeriod.replace("year-", "");
@@ -90,14 +96,14 @@ export function InquiryTimingDistribution({
   }, [availableYears, selectedPeriod]);
 
   const byDayOfWeek = useMemo(
-    () => getInquiriesByDayOfWeek(filteredInquiries),
-    [filteredInquiries]
+    () => getInquiriesByDayOfWeek(inquiriesWithKnownTime),
+    [inquiriesWithKnownTime]
   );
   const byTimeOfDay = useMemo(
-    () => getInquiriesByTimeOfDay(filteredInquiries),
-    [filteredInquiries]
+    () => getInquiriesByTimeOfDay(inquiriesWithKnownTime),
+    [inquiriesWithKnownTime]
   );
-  const total = filteredInquiries.length;
+  const total = inquiriesWithKnownTime.length;
 
   return (
     <Card>
@@ -169,7 +175,7 @@ export function InquiryTimingDistribution({
             <DistributionBars data={byTimeOfDay} total={total} />
           </TabsContent>
           <TabsContent value="heatmap">
-            <TimingHeatmap inquiries={filteredInquiries} />
+            <TimingHeatmap inquiries={inquiriesWithKnownTime} />
           </TabsContent>
         </Tabs>
       </CardContent>
