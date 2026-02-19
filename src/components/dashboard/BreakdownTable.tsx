@@ -14,14 +14,14 @@ interface BreakdownTableProps {
   maxVisibleRows?: number;
 }
 
-export function BreakdownTable({ data, title, maxVisibleRows = 1000 }: BreakdownTableProps) {
+const DEFAULT_MAX_VISIBLE_ROWS = 10;
+
+export function BreakdownTable({ data, title, maxVisibleRows = DEFAULT_MAX_VISIBLE_ROWS }: BreakdownTableProps) {
   const hasMoreRows = data.length > maxVisibleRows;
 
-  // Fixed-height container is required so the internal scroller engages and the page doesn't grow.
-  // Table cells use p-4 (≈ 32px) + borders, so ~41px per row is a good visual approximation.
   const rowHeightPx = 41;
-  const headerHeightPx = 48; // TableHead uses h-12
-  const fixedHeightPx = maxVisibleRows * rowHeightPx + headerHeightPx;
+  const headerHeightPx = 48;
+  const fixedHeightPx = Math.min(maxVisibleRows, data.length) * rowHeightPx + headerHeightPx;
 
   return (
     <div className="space-y-3">
