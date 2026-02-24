@@ -21,6 +21,8 @@ export interface ClientInquiry {
   nannyLanguagePreference: 'swedish-speaking' | 'bilingual';
   everReachedStage7?: boolean;
   firstStage7Date?: Date;
+  /** Дата из setpriceplans (если клиент есть в таблице) — используется в статистике конверсии */
+  setpriceplanDate?: Date;
   breezy?: string;
 }
 
@@ -113,6 +115,7 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         nannyLanguagePreference: 'swedish-speaking',
         everReachedStage7: client.ever_reached_stage_7 === true || client.ever_reached_stage_7 === 1 ? true : undefined,
         firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
+        setpriceplanDate: client.setpriceplan_date && client.setpriceplan_date !== '0000-00-00' ? new Date(client.setpriceplan_date) : undefined,
         breezy: client.breezy && String(client.breezy).trim() ? String(client.breezy).trim() : undefined,
       };
     });

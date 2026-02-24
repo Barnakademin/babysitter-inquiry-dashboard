@@ -3,8 +3,9 @@ import { differenceInDays, format, startOfMonth } from "date-fns";
 
 // Stage meanings (логика как в barnakademin-insight):
 // Stage 7: клиент стал клиентом; если он когда-либо был в стадии 7 — в статистике всегда считается конвертированным, даже после перехода в 8/9.
+// Наличие записи в setpriceplans: клиент считается конвертированным, дата конверсии — setpriceplans.date.
 // Stage 1-6: в процессе.
-// Stage 8-9: не конвертирован (если никогда не был в 7).
+// Stage 8-9: не конвертирован (если никогда не был в 7 и нет даты в setpriceplans).
 
 export type ConversionStatus = "converted" | "not_converted" | "in_progress";
 
@@ -42,17 +43,16 @@ export interface YearlyStats {
 }
 
 export function getConversionStatus(inquiry: ClientInquiry): ConversionStatus {
-  if (inquiry.stage === 7 || inquiry.everReachedStage7) return "converted";
+  if (inquiry.setpriceplanDate || inquiry.stage === 7 || inquiry.everReachedStage7) return "converted";
   if (inquiry.stage >= 8) return "not_converted";
   return "in_progress";
 }
 
 export function getDaysToConvert(inquiry: ClientInquiry): number | null {
-  const dateStage7 = inquiry.stage === 7
-    ? inquiry.stageDate
-    : (inquiry.everReachedStage7 && inquiry.firstStage7Date ? inquiry.firstStage7Date : null);
-  if (!dateStage7) return null;
-  return differenceInDays(dateStage7, inquiry.createdAt);
+  const conversionDate = inquiry.setpriceplanDate
+    ?? (inquiry.stage === 7 ? inquiry.stageDate : (inquiry.everReachedStage7 && inquiry.firstStage7Date ? inquiry.firstStage7Date : null));
+  if (!conversionDate) return null;
+  return differenceInDays(conversionDate, inquiry.createdAt);
 }
 
 export function calculateAverage(numbers: number[]): number | null {
