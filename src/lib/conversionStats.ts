@@ -110,24 +110,39 @@ export function getBreakdownByCity(inquiries: ClientInquiry[]): BreakdownItem[] 
   }).sort((a, b) => b.total - a.total);
 }
 
+// Group by combination: same set of values = one bucket (e.g. "Swedish + English")
+function getBreakdownByCombination(
+  inquiries: ClientInquiry[],
+  getItems: (i: ClientInquiry) => string[],
+  joinLabel: string = " + "
+): BreakdownItem[] {
+  const combinationMap = new Map<string, ClientInquiry[]>();
+  for (const inquiry of inquiries) {
+    const items = getItems(inquiry).filter(Boolean);
+    if (items.length === 0) continue;
+    const key = [...items].sort((a, b) => a.localeCompare(b)).join(", ");
+    const existing = combinationMap.get(key) || [];
+    combinationMap.set(key, [...existing, inquiry]);
+  }
+  return Array.from(combinationMap.entries())
+    .map(([key, group]) => {
+      const label = key.split(", ").join(joinLabel);
+      const stats = calculateConversionStats(group);
+      return {
+        label,
+        total: stats.total,
+        converted: stats.converted,
+        notConverted: stats.notConverted,
+        inProgress: stats.inProgress,
+        conversionRate: stats.conversionRate,
+        avgDaysToConvert: stats.avgDaysToConvert,
+      };
+    })
+    .sort((a, b) => b.total - a.total);
+}
+
 export function getBreakdownByLanguage(inquiries: ClientInquiry[]): BreakdownItem[] {
-  // Get all unique languages from the languages array
-  const allLanguages = [...new Set(inquiries.flatMap((i) => i.languages))];
-  
-  return allLanguages.map((language) => {
-    const langInquiries = inquiries.filter((i) => i.languages.includes(language));
-    const stats = calculateConversionStats(langInquiries);
-    
-    return {
-      label: language,
-      total: stats.total,
-      converted: stats.converted,
-      notConverted: stats.notConverted,
-      inProgress: stats.inProgress,
-      conversionRate: stats.conversionRate,
-      avgDaysToConvert: stats.avgDaysToConvert,
-    };
-  }).sort((a, b) => b.total - a.total);
+  return getBreakdownByCombination(inquiries, (i) => i.languages || []);
 }
 
 export function getBreakdownByNumberOfKids(inquiries: ClientInquiry[]): BreakdownItem[] {
@@ -150,22 +165,11 @@ export function getBreakdownByNumberOfKids(inquiries: ClientInquiry[]): Breakdow
 }
 
 export function getBreakdownByHelpType(inquiries: ClientInquiry[]): BreakdownItem[] {
-  const helpTypes = [...new Set(inquiries.map((i) => i.needHelpWith))];
-  
-  return helpTypes.map((helpType) => {
-    const typeInquiries = inquiries.filter((i) => i.needHelpWith === helpType);
-    const stats = calculateConversionStats(typeInquiries);
-    
-    return {
-      label: helpType,
-      total: stats.total,
-      converted: stats.converted,
-      notConverted: stats.notConverted,
-      inProgress: stats.inProgress,
-      conversionRate: stats.conversionRate,
-      avgDaysToConvert: stats.avgDaysToConvert,
-    };
-  }).sort((a, b) => b.total - a.total);
+  return getBreakdownByCombination(inquiries, (i) => {
+    const raw = (i.needHelpWith || "").trim();
+    if (!raw) return [];
+    return raw.split(",").map((s) => s.trim()).filter(Boolean);
+  });
 }
 
 function getFrequencyOrder(label: string): number {
