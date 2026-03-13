@@ -140,6 +140,7 @@ const Index = () => {
             onClearFilters={clearFilters}
             allLanguages={allLanguages}
             allCities={allCities}
+            allYears={allYears}
           />
         </div>
 

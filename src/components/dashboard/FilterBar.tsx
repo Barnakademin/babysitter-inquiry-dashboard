@@ -80,6 +80,20 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguage
         </SelectContent>
       </Select>
 
+      <Select value={filters.year} onValueChange={(v) => onFilterChange("year", v)}>
+        <SelectTrigger className="w-[140px] bg-card">
+          <SelectValue placeholder="All Years" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Years</SelectItem>
+          {allYears.map((year) => (
+            <SelectItem key={year} value={year}>
+              {year}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
       {hasActiveFilters && (
         <Button
           variant="ghost"
