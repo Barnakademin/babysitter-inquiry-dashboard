@@ -224,6 +224,19 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                     </div>
                   </TableCell>
                   <TableCell>
+                    {inquiry.website ? (
+                      <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
+                        inquiry.website === 'BB' 
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' 
+                          : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                      }`}>
+                        {inquiry.website}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <span className="text-sm">{inquiry.needHelpWith}</span>
                   </TableCell>
                   <TableCell>
