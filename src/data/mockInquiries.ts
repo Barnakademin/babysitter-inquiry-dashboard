@@ -24,6 +24,8 @@ export interface ClientInquiry {
   /** Дата из setpriceplans — при наличии учитывается в статистике конверсии */
   setpriceplanDate?: Date;
   breezy?: string;
+  /** Сайт-источник клиента: BB (barnvakt.se/babysitting) или BiSt (barnvakt.se/bisitter) */
+  website?: 'BB' | 'BiSt';
 }
 
 export const mockInquiries: ClientInquiry[] = [

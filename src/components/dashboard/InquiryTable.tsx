@@ -134,6 +134,7 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
               <SortableHeader columnKey="city" sortConfig={sortConfig} onSort={onSort}>Location</SortableHeader>
               <SortableHeader columnKey="service" sortConfig={sortConfig} onSort={onSort}>Service</SortableHeader>
               <TableHead>Languages</TableHead>
+              <SortableHeader columnKey="website" sortConfig={sortConfig} onSort={onSort}>Site</SortableHeader>
               <SortableHeader columnKey="needHelpWith" sortConfig={sortConfig} onSort={onSort}>Need Help With</SortableHeader>
               <SortableHeader columnKey="howOften" sortConfig={sortConfig} onSort={onSort}>Frequency</SortableHeader>
               <SortableHeader columnKey="numberOfKids" sortConfig={sortConfig} onSort={onSort}>
