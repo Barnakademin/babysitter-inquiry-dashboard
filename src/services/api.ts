@@ -24,8 +24,8 @@ export interface ClientInquiry {
   /** Дата из setpriceplans (если клиент есть в таблице) — используется в статистике конверсии */
   setpriceplanDate?: Date;
   breezy?: string;
-  /** Сайт-источник клиента: BB или BVSto */
-  website?: 'BB' | 'BVSto';
+  /** Сайт-источник клиента: BB или BV */
+  website?: 'BB' | 'BV';
 }
 
 /**
