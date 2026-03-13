@@ -226,7 +226,7 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                   <TableCell>
                     {(() => {
                       // TODO: remove demo fallback once API provides website field
-                      const site = inquiry.website ?? (index === 0 ? 'BB' : index === 1 ? 'BiSt' : undefined);
+                      const site = inquiry.website ?? (index === 0 ? 'BB' : index === 1 ? 'BVSto' : undefined);
                       return site ? (
                         <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
                           site === 'BB' 
