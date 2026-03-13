@@ -95,6 +95,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const breakdownByNannyPref = useMemo(() => getBreakdownByNannyLanguagePreference(filteredInquiries), [filteredInquiries]);
   const breakdownByService = useMemo(() => getBreakdownByService(filteredInquiries), [filteredInquiries]);
   const breakdownByFormLang = useMemo(() => getBreakdownByFormLanguage(filteredInquiries), [filteredInquiries]);
+  const breakdownByWebsite = useMemo(() => getBreakdownByWebsite(filteredInquiries), [filteredInquiries]);
 
   const notConvertedRate = stats.total > 0 
     ? Math.round((stats.notConverted / stats.total) * 100) 
