@@ -44,28 +44,6 @@ function parseDateTime(value: string): string {
 /**
  * Загружает данные клиентов из API /json/clients-full
  */
-const normalizeSource = (raw: unknown): ClientInquiry['website'] => {
-  if (raw === null || raw === undefined) return undefined;
-
-  const value = String(raw).trim();
-  if (!value) return undefined;
-
-  const numeric = Number(value);
-  if (!Number.isNaN(numeric)) {
-    if (numeric === 0) return 'BB';
-    if (numeric === 1) return 'BV';
-    if (numeric === 2 || numeric === 3) return 'Phone';
-    if (numeric === 4) return 'Email';
-  }
-
-  const normalized = value.toLowerCase();
-  if (normalized === 'bb') return 'BB';
-  if (normalized === 'bv') return 'BV';
-  if (['phone', 'tel', 'telephone', 'telefon'].includes(normalized)) return 'Phone';
-  if (['email', 'e-mail', 'mail'].includes(normalized) || normalized.includes('@')) return 'Email';
-
-  return undefined;
-};
 
 export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
   try {
