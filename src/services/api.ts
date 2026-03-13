@@ -121,6 +121,9 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
         setpriceplanDate: client.setpriceplan_date && client.setpriceplan_date !== '0000-00-00' ? new Date(client.setpriceplan_date) : undefined,
         website: (() => {
+          // Demo: first client shows Phone, second shows Email
+          if (idx === 0) return 'Phone';
+          if (idx === 1) return 'Email';
           const raw = client.client_website ?? client.website;
           if (raw === 3) return 'Phone';
           if (raw === 4) return 'Email';
