@@ -49,9 +49,9 @@ interface ConversionStatisticsProps {
   inquiries: ClientInquiry[];
 }
 
-const sourceIconMap: Record<string, { icon: React.ReactNode; label?: string }> = {
-  BB: { icon: <Globe className="w-4 h-4 text-blue-600 dark:text-blue-400" />, label: "BB" },
-  BV: { icon: <Globe className="w-4 h-4 text-amber-600 dark:text-amber-400" />, label: "BV" },
+const sourceIconMap: Record<string, { icon?: React.ReactNode; text?: string }> = {
+  BB: { text: "BB" },
+  BV: { text: "BV" },
   Phone: { icon: <Phone className="w-4 h-4 text-green-600 dark:text-green-400" /> },
   Email: { icon: <AtSign className="w-4 h-4 text-purple-600 dark:text-purple-400" /> },
 };
@@ -62,7 +62,7 @@ function renderSourceLabel(label: string) {
   return (
     <span className="inline-flex items-center gap-1.5">
       {config.icon}
-      {config.label && <span>{config.label}</span>}
+      {config.text && <span>{config.text}</span>}
     </span>
   );
 }
