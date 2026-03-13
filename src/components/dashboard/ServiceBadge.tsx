@@ -1,4 +1,4 @@
-import { Baby, Heart } from "lucide-react";
+import { Baby, Flower2 } from "lucide-react";
 
 interface ServiceBadgeProps {
   service: 'babysitting' | 'nanny';
@@ -12,7 +12,7 @@ const serviceConfig = {
   },
   nanny: {
     label: "KB",
-    icon: Heart,
+    icon: Flower2,
     className: "bg-primary/15 text-primary",
   },
 };
