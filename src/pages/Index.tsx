@@ -81,6 +81,9 @@ const Index = () => {
     if (filters.language) {
       result = result.filter((inquiry) => inquiry.languages.includes(filters.language));
     }
+    if (filters.year) {
+      result = result.filter((inquiry) => inquiry.createdAt.getFullYear().toString() === filters.year);
+    }
 
     // Sort
     if (sortConfig) {
