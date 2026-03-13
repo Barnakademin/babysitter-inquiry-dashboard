@@ -311,8 +311,8 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               <TabsContent value="formLang" className="mt-4">
                 <BreakdownTable data={breakdownByFormLang} title="By Form Language" />
               </TabsContent>
-              <TabsContent value="website" className="mt-4">
-                <BreakdownTable data={breakdownByWebsite} title="By Site (BB / BV)" />
+              <TabsContent value="source" className="mt-4">
+                <BreakdownTable data={breakdownBySource} title="By Source" renderLabel={renderSourceLabel} />
               </TabsContent>
             </Tabs>
           </CardContent>

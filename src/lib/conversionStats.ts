@@ -268,15 +268,15 @@ export function getBreakdownByFormLanguage(inquiries: ClientInquiry[]): Breakdow
   }).sort((a, b) => b.total - a.total);
 }
 
-export function getBreakdownByWebsite(inquiries: ClientInquiry[]): BreakdownItem[] {
-  const websites = [...new Set(inquiries.map((i) => i.website || 'Unknown'))];
+export function getBreakdownBySource(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const sources = [...new Set(inquiries.map((i) => i.website || 'Unknown'))];
   
-  return websites.map((site) => {
-    const siteInquiries = inquiries.filter((i) => (i.website || 'Unknown') === site);
-    const stats = calculateConversionStats(siteInquiries);
+  return sources.map((source) => {
+    const sourceInquiries = inquiries.filter((i) => (i.website || 'Unknown') === source);
+    const stats = calculateConversionStats(sourceInquiries);
     
     return {
-      label: site,
+      label: source,
       total: stats.total,
       converted: stats.converted,
       notConverted: stats.notConverted,
