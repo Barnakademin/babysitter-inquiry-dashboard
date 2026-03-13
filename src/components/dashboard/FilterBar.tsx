@@ -14,11 +14,13 @@ interface FilterBarProps {
     city: string;
     service: string;
     language: string;
+    year: string;
   };
   onFilterChange: (key: string, value: string) => void;
   onClearFilters: () => void;
   allLanguages: string[];
   allCities: string[];
+  allYears: string[];
 }
 
 const serviceLabels: Record<string, string> = {
@@ -26,8 +28,8 @@ const serviceLabels: Record<string, string> = {
   nanny: "KB",
 };
 
-export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguages, allCities }: FilterBarProps) {
-  const hasActiveFilters = filters.city || filters.service || filters.language;
+export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguages, allCities, allYears }: FilterBarProps) {
+  const hasActiveFilters = filters.city || filters.service || filters.language || filters.year;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -73,6 +75,20 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguage
           {allLanguages.map((lang) => (
             <SelectItem key={lang} value={lang}>
               {lang}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select value={filters.year} onValueChange={(v) => onFilterChange("year", v)}>
+        <SelectTrigger className="w-[140px] bg-card">
+          <SelectValue placeholder="All Years" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Years</SelectItem>
+          {allYears.map((year) => (
+            <SelectItem key={year} value={year}>
+              {year}
             </SelectItem>
           ))}
         </SelectContent>

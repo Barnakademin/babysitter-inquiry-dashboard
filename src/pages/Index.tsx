@@ -20,6 +20,7 @@ const Index = () => {
     city: "",
     service: "",
     language: "",
+    year: "",
   });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "createdAt", direction: "desc" });
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,13 +33,17 @@ const Index = () => {
     return [...new Set(inquiries.map((i) => i.city).filter(Boolean))].sort();
   }, [inquiries]);
 
+  const allYears = useMemo(() => {
+    return [...new Set(inquiries.map((i) => i.createdAt.getFullYear().toString()))].sort().reverse();
+  }, [inquiries]);
+
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
     setCurrentPage(1);
   };
 
   const clearFilters = () => {
-    setFilters({ city: "", service: "", language: "" });
+    setFilters({ city: "", service: "", language: "", year: "" });
     setCurrentPage(1);
   };
 
@@ -75,6 +80,9 @@ const Index = () => {
     }
     if (filters.language) {
       result = result.filter((inquiry) => inquiry.languages.includes(filters.language));
+    }
+    if (filters.year) {
+      result = result.filter((inquiry) => inquiry.createdAt.getFullYear().toString() === filters.year);
     }
 
     // Sort
@@ -132,6 +140,7 @@ const Index = () => {
             onClearFilters={clearFilters}
             allLanguages={allLanguages}
             allCities={allCities}
+            allYears={allYears}
           />
         </div>
 
