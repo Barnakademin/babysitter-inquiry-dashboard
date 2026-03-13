@@ -913,7 +913,7 @@ export const mockInquiries: ClientInquiry[] = [
   },
 ].map((item, index): ClientInquiry => ({
   ...item as ClientInquiry,
-  website: index === 2 ? 'Phone' : index === 3 ? 'Email' : index % 5 === 0 ? 'Phone' : index % 7 === 0 ? 'Email' : index % 3 === 0 ? 'BB' : 'BV',
+  website: index === 0 ? 'BB' : index === 1 ? 'BV' : index === 2 ? 'Phone' : index === 3 ? 'Email' : index % 5 === 0 ? 'Phone' : index % 7 === 0 ? 'Email' : index % 3 === 0 ? 'BB' : 'BV',
 }));
 
 export const cities = [...new Set(mockInquiries.map(i => i.city))];
