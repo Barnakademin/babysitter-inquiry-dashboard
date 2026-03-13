@@ -24,8 +24,8 @@ export interface ClientInquiry {
   /** Дата из setpriceplans — при наличии учитывается в статистике конверсии */
   setpriceplanDate?: Date;
   breezy?: string;
-  /** Сайт-источник клиента: BB или BV */
-  website?: 'BB' | 'BV';
+  /** Источник клиента: BB, BV, Phone, Email */
+  website?: 'BB' | 'BV' | 'Phone' | 'Email';
 }
 
 export const mockInquiries: ClientInquiry[] = [
