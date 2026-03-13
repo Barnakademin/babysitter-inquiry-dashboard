@@ -12,7 +12,7 @@ const serviceConfig = {
   },
   nanny: {
     label: "KB",
-    icon: Heart,
+    icon: Flower2,
     className: "bg-primary/15 text-primary",
   },
 };
