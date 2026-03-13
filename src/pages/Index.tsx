@@ -33,6 +33,10 @@ const Index = () => {
     return [...new Set(inquiries.map((i) => i.city).filter(Boolean))].sort();
   }, [inquiries]);
 
+  const allYears = useMemo(() => {
+    return [...new Set(inquiries.map((i) => i.createdAt.getFullYear().toString()))].sort().reverse();
+  }, [inquiries]);
+
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value === "all" ? "" : value }));
     setCurrentPage(1);
