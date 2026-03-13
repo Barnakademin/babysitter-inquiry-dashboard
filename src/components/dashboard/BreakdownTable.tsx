@@ -7,16 +7,18 @@ import {
 } from "@/components/ui/table";
 import { BreakdownItem } from "@/lib/conversionStats";
 import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 interface BreakdownTableProps {
   data: BreakdownItem[];
   title: string;
   maxVisibleRows?: number;
+  renderLabel?: (label: string) => ReactNode;
 }
 
 const DEFAULT_MAX_VISIBLE_ROWS = 10;
 
-export function BreakdownTable({ data, title, maxVisibleRows = DEFAULT_MAX_VISIBLE_ROWS }: BreakdownTableProps) {
+export function BreakdownTable({ data, title, maxVisibleRows = DEFAULT_MAX_VISIBLE_ROWS, renderLabel }: BreakdownTableProps) {
   const hasMoreRows = data.length > maxVisibleRows;
 
   const rowHeightPx = 41;
