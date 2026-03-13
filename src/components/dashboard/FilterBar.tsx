@@ -14,11 +14,13 @@ interface FilterBarProps {
     city: string;
     service: string;
     language: string;
+    year: string;
   };
   onFilterChange: (key: string, value: string) => void;
   onClearFilters: () => void;
   allLanguages: string[];
   allCities: string[];
+  allYears: string[];
 }
 
 const serviceLabels: Record<string, string> = {
