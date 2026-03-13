@@ -64,7 +64,7 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
       return [];
     }
 
-    return data.map((client: any, index: number) => {
+    return data.map((client: any) => {
       const languages = Array.isArray(client.language) 
         ? client.language.map((lang: any) => lang.name || '').filter(Boolean)
         : [];
