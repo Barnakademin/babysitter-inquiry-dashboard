@@ -24,8 +24,8 @@ export interface ClientInquiry {
   /** Дата из setpriceplans — при наличии учитывается в статистике конверсии */
   setpriceplanDate?: Date;
   breezy?: string;
-  /** Сайт-источник клиента: BB или BV */
-  website?: 'BB' | 'BV';
+  /** Источник клиента: BB, BV, Phone, Email */
+  website?: 'BB' | 'BV' | 'Phone' | 'Email';
 }
 
 export const mockInquiries: ClientInquiry[] = [
@@ -913,7 +913,7 @@ export const mockInquiries: ClientInquiry[] = [
   },
 ].map((item, index): ClientInquiry => ({
   ...item as ClientInquiry,
-  website: index % 3 === 0 ? 'BB' : 'BV',
+  website: index % 5 === 0 ? 'Phone' : index % 7 === 0 ? 'Email' : index % 3 === 0 ? 'BB' : 'BV',
 }));
 
 export const cities = [...new Set(mockInquiries.map(i => i.city))];

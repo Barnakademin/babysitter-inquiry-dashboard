@@ -7,16 +7,18 @@ import {
 } from "@/components/ui/table";
 import { BreakdownItem } from "@/lib/conversionStats";
 import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 interface BreakdownTableProps {
   data: BreakdownItem[];
   title: string;
   maxVisibleRows?: number;
+  renderLabel?: (label: string) => ReactNode;
 }
 
 const DEFAULT_MAX_VISIBLE_ROWS = 10;
 
-export function BreakdownTable({ data, title, maxVisibleRows = DEFAULT_MAX_VISIBLE_ROWS }: BreakdownTableProps) {
+export function BreakdownTable({ data, title, maxVisibleRows = DEFAULT_MAX_VISIBLE_ROWS, renderLabel }: BreakdownTableProps) {
   const hasMoreRows = data.length > maxVisibleRows;
 
   const rowHeightPx = 41;
@@ -55,7 +57,7 @@ export function BreakdownTable({ data, title, maxVisibleRows = DEFAULT_MAX_VISIB
             <TableBody>
               {data.map((item) => (
                 <TableRow key={item.label}>
-                  <TableCell className="font-medium">{item.label}</TableCell>
+                  <TableCell className="font-medium">{renderLabel ? renderLabel(item.label) : item.label}</TableCell>
                   <TableCell className="text-center">{item.total}</TableCell>
                   <TableCell className="text-center">
                     <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-medium dark:bg-green-900/30 dark:text-green-400">

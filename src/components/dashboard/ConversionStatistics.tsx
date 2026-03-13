@@ -10,7 +10,7 @@ import {
   getBreakdownByNannyLanguagePreference,
   getBreakdownByFormLanguage,
   getBreakdownByService,
-  getBreakdownByWebsite,
+  getBreakdownBySource,
   getYearlyStats,
 } from "@/lib/conversionStats";
 import { StatCard } from "./StatCard";
@@ -36,6 +36,9 @@ import {
   ChevronUp,
   X,
   Calendar,
+  Phone,
+  AtSign,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +47,24 @@ import { TimeToConvertDistribution } from "./TimeToConvertDistribution";
 
 interface ConversionStatisticsProps {
   inquiries: ClientInquiry[];
+}
+
+const sourceIconMap: Record<string, { icon: React.ReactNode; label?: string }> = {
+  BB: { icon: <Globe className="w-4 h-4 text-blue-600 dark:text-blue-400" />, label: "BB" },
+  BV: { icon: <Globe className="w-4 h-4 text-amber-600 dark:text-amber-400" />, label: "BV" },
+  Phone: { icon: <Phone className="w-4 h-4 text-green-600 dark:text-green-400" /> },
+  Email: { icon: <AtSign className="w-4 h-4 text-purple-600 dark:text-purple-400" /> },
+};
+
+function renderSourceLabel(label: string) {
+  const config = sourceIconMap[label];
+  if (!config) return label;
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      {config.icon}
+      {config.label && <span>{config.label}</span>}
+    </span>
+  );
 }
 
 export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
@@ -95,7 +116,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const breakdownByNannyPref = useMemo(() => getBreakdownByNannyLanguagePreference(filteredInquiries), [filteredInquiries]);
   const breakdownByService = useMemo(() => getBreakdownByService(filteredInquiries), [filteredInquiries]);
   const breakdownByFormLang = useMemo(() => getBreakdownByFormLanguage(filteredInquiries), [filteredInquiries]);
-  const breakdownByWebsite = useMemo(() => getBreakdownByWebsite(filteredInquiries), [filteredInquiries]);
+  const breakdownBySource = useMemo(() => getBreakdownBySource(filteredInquiries), [filteredInquiries]);
 
   const notConvertedRate = stats.total > 0 
     ? Math.round((stats.notConverted / stats.total) * 100) 
@@ -288,7 +309,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 <TabsTrigger value="frequency">Frequency</TabsTrigger>
                 <TabsTrigger value="service">Service</TabsTrigger>
                 <TabsTrigger value="formLang">Form Lang</TabsTrigger>
-                <TabsTrigger value="website">Site</TabsTrigger>
+                <TabsTrigger value="source">Source</TabsTrigger>
               </TabsList>
               <TabsContent value="city" className="mt-4">
                 <BreakdownTable data={breakdownByCity} title="By Location" />
@@ -311,8 +332,8 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               <TabsContent value="formLang" className="mt-4">
                 <BreakdownTable data={breakdownByFormLang} title="By Form Language" />
               </TabsContent>
-              <TabsContent value="website" className="mt-4">
-                <BreakdownTable data={breakdownByWebsite} title="By Site (BB / BV)" />
+              <TabsContent value="source" className="mt-4">
+                <BreakdownTable data={breakdownBySource} title="By Source" renderLabel={renderSourceLabel} />
               </TabsContent>
             </Tabs>
           </CardContent>
