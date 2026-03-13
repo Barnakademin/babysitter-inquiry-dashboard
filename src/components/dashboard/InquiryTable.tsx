@@ -81,6 +81,7 @@ function SortableHeader({
   );
 }
 
+// Force rebuild to refresh preview
 export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsPerPage = 100 }: InquiryTableProps) {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
