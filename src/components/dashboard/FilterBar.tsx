@@ -28,8 +28,8 @@ const serviceLabels: Record<string, string> = {
   nanny: "KB",
 };
 
-export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguages, allCities }: FilterBarProps) {
-  const hasActiveFilters = filters.city || filters.service || filters.language;
+export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguages, allCities, allYears }: FilterBarProps) {
+  const hasActiveFilters = filters.city || filters.service || filters.language || filters.year;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
