@@ -268,6 +268,25 @@ export function getBreakdownByFormLanguage(inquiries: ClientInquiry[]): Breakdow
   }).sort((a, b) => b.total - a.total);
 }
 
+export function getBreakdownByWebsite(inquiries: ClientInquiry[]): BreakdownItem[] {
+  const websites = [...new Set(inquiries.map((i) => i.website || 'Unknown'))];
+  
+  return websites.map((site) => {
+    const siteInquiries = inquiries.filter((i) => (i.website || 'Unknown') === site);
+    const stats = calculateConversionStats(siteInquiries);
+    
+    return {
+      label: site,
+      total: stats.total,
+      converted: stats.converted,
+      notConverted: stats.notConverted,
+      inProgress: stats.inProgress,
+      conversionRate: stats.conversionRate,
+      avgDaysToConvert: stats.avgDaysToConvert,
+    };
+  }).sort((a, b) => b.total - a.total);
+}
+
 export function getMonthlyStats(inquiries: ClientInquiry[]): MonthlyStats[] {
   // Group inquiries by month of creation
   const monthMap = new Map<string, ClientInquiry[]>();

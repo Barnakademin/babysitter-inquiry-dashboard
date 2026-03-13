@@ -10,6 +10,7 @@ import {
   getBreakdownByNannyLanguagePreference,
   getBreakdownByFormLanguage,
   getBreakdownByService,
+  getBreakdownByWebsite,
   getYearlyStats,
 } from "@/lib/conversionStats";
 import { StatCard } from "./StatCard";
@@ -94,6 +95,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const breakdownByNannyPref = useMemo(() => getBreakdownByNannyLanguagePreference(filteredInquiries), [filteredInquiries]);
   const breakdownByService = useMemo(() => getBreakdownByService(filteredInquiries), [filteredInquiries]);
   const breakdownByFormLang = useMemo(() => getBreakdownByFormLanguage(filteredInquiries), [filteredInquiries]);
+  const breakdownByWebsite = useMemo(() => getBreakdownByWebsite(filteredInquiries), [filteredInquiries]);
 
   const notConvertedRate = stats.total > 0 
     ? Math.round((stats.notConverted / stats.total) * 100) 
@@ -278,7 +280,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
 
             {/* Breakdown Tabs */}
             <Tabs defaultValue="city" className="w-full">
-              <TabsList className="grid w-full grid-cols-7 max-w-3xl">
+              <TabsList className="grid w-full grid-cols-8 max-w-4xl">
                 <TabsTrigger value="city">Location</TabsTrigger>
                 <TabsTrigger value="language">Language</TabsTrigger>
                 <TabsTrigger value="kids">Children</TabsTrigger>
@@ -286,6 +288,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 <TabsTrigger value="frequency">Frequency</TabsTrigger>
                 <TabsTrigger value="service">Service</TabsTrigger>
                 <TabsTrigger value="formLang">Form Lang</TabsTrigger>
+                <TabsTrigger value="website">Site</TabsTrigger>
               </TabsList>
               <TabsContent value="city" className="mt-4">
                 <BreakdownTable data={breakdownByCity} title="By Location" />
@@ -307,6 +310,9 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
               </TabsContent>
               <TabsContent value="formLang" className="mt-4">
                 <BreakdownTable data={breakdownByFormLang} title="By Form Language" />
+              </TabsContent>
+              <TabsContent value="website" className="mt-4">
+                <BreakdownTable data={breakdownByWebsite} title="By Site (BB / BV)" />
               </TabsContent>
             </Tabs>
           </CardContent>
