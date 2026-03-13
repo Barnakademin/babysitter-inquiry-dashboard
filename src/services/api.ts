@@ -64,7 +64,7 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
       return [];
     }
 
-    return data.map((client: any) => {
+    return data.map((client: any, index: number) => {
       const languages = Array.isArray(client.language) 
         ? client.language.map((lang: any) => lang.name || '').filter(Boolean)
         : [];
@@ -87,6 +87,10 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || '';
       };
+
+      // Temporary: assign BB/BiSt to first two clients for design preview until API provides the field
+      const websiteFromApi = client.website === 'BB' ? 'BB' : client.website === 'BiSt' ? 'BiSt' : undefined;
+      const websitePreview: 'BB' | 'BiSt' | undefined = websiteFromApi ?? (index === 0 ? 'BB' : index === 1 ? 'BiSt' : undefined);
 
       return {
         id: String(client.client_id || client.id || ''),
@@ -118,7 +122,7 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         everReachedStage7: client.ever_reached_stage_7 === true || client.ever_reached_stage_7 === 1 ? true : undefined,
         firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
         setpriceplanDate: client.setpriceplan_date && client.setpriceplan_date !== '0000-00-00' ? new Date(client.setpriceplan_date) : undefined,
-        website: client.website === 'BB' ? 'BB' : client.website === 'BiSt' ? 'BiSt' : undefined,
+        website: websitePreview,
         breezy: client.breezy && String(client.breezy).trim() ? String(client.breezy).trim() : undefined,
       };
     });
