@@ -288,7 +288,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 <TabsTrigger value="frequency">Frequency</TabsTrigger>
                 <TabsTrigger value="service">Service</TabsTrigger>
                 <TabsTrigger value="formLang">Form Lang</TabsTrigger>
-                <TabsTrigger value="website">Site</TabsTrigger>
+                <TabsTrigger value="source">Source</TabsTrigger>
               </TabsList>
               <TabsContent value="city" className="mt-4">
                 <BreakdownTable data={breakdownByCity} title="By Location" />
