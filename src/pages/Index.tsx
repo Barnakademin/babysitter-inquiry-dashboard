@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { ClientInquiry, fetchClientsFull } from "@/services/api";
+import { ClientInquiry, mockInquiries } from "@/data/mockInquiries";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { SearchBar } from "@/components/dashboard/SearchBar";
 import { FilterBar } from "@/components/dashboard/FilterBar";
@@ -8,18 +7,13 @@ import { InquiryTable } from "@/components/dashboard/InquiryTable";
 import { Pagination } from "@/components/dashboard/Pagination";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Loader2 } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
 const Index = () => {
-  const { data: inquiries = [], isLoading, error } = useQuery({
-    queryKey: ['clients-full'],
-    queryFn: fetchClientsFull,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
+  const inquiries: ClientInquiry[] = mockInquiries;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
