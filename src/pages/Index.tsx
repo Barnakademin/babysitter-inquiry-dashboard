@@ -43,7 +43,7 @@ const Index = () => {
   };
 
   const clearFilters = () => {
-    setFilters({ city: "", service: "", language: "" });
+    setFilters({ city: "", service: "", language: "", year: "" });
     setCurrentPage(1);
   };
 
