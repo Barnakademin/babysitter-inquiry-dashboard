@@ -231,7 +231,7 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                         <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
                           site === 'BB' 
                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' 
-                            : 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400'
+                            : 'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
                         }`}>
                           {site}
                         </span>
