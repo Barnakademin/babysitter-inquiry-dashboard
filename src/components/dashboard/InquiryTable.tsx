@@ -225,9 +225,11 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                   </TableCell>
                   <TableCell>
                     {(() => {
-                      // TODO: remove demo fallback once API provides website field
-                      const site = inquiry.website ?? (index === 0 ? 'BB' : index === 1 ? 'BV' : undefined);
-                      return site ? (
+                      const site = inquiry.website;
+                      if (!site) return <span className="text-muted-foreground text-xs">—</span>;
+                      if (site === 'Phone') return <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />;
+                      if (site === 'Email') return <AtSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />;
+                      return (
                         <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
                           site === 'BB' 
                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' 
@@ -235,8 +237,6 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                         }`}>
                           {site}
                         </span>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">—</span>
                       );
                     })()}
                   </TableCell>
