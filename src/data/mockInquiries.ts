@@ -911,10 +911,10 @@ export const mockInquiries: ClientInquiry[] = [
     createdAt: new Date("2025-08-10T09:00:00"),
     nannyLanguagePreference: "swedish-speaking",
   },
-].map((item, index) => ({
-  ...item,
-  website: (index % 3 === 0 ? 'BB' : 'BiSt') as const,
-})) as ClientInquiry[];
+].map((item, index): ClientInquiry => ({
+  ...item as ClientInquiry,
+  website: index % 3 === 0 ? 'BB' : 'BiSt',
+}));
 
 export const cities = [...new Set(mockInquiries.map(i => i.city))];
 export const services = ['babysitting', 'nanny'] as const;
