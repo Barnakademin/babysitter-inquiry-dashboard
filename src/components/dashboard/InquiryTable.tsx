@@ -134,6 +134,7 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
               <SortableHeader columnKey="city" sortConfig={sortConfig} onSort={onSort}>Location</SortableHeader>
               <SortableHeader columnKey="service" sortConfig={sortConfig} onSort={onSort}>Service</SortableHeader>
               <TableHead>Languages</TableHead>
+              <SortableHeader columnKey="website" sortConfig={sortConfig} onSort={onSort}>Site</SortableHeader>
               <SortableHeader columnKey="needHelpWith" sortConfig={sortConfig} onSort={onSort}>Need Help With</SortableHeader>
               <SortableHeader columnKey="howOften" sortConfig={sortConfig} onSort={onSort}>Frequency</SortableHeader>
               <SortableHeader columnKey="numberOfKids" sortConfig={sortConfig} onSort={onSort}>
@@ -221,6 +222,19 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                         </span>
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    {inquiry.website ? (
+                      <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
+                        inquiry.website === 'BB' 
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' 
+                          : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                      }`}>
+                        {inquiry.website}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <span className="text-sm">{inquiry.needHelpWith}</span>
