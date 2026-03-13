@@ -225,7 +225,7 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                   </TableCell>
                   <TableCell>
                     {(() => {
-                      const site = inquiry.website;
+                      const site = index === 0 ? 'Phone' : inquiry.website;
                       if (!site) return <span className="text-muted-foreground text-xs">—</span>;
                       if (site === 'Phone') return <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />;
                       if (site === 'Email') return <AtSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />;
