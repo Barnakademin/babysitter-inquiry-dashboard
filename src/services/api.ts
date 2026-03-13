@@ -120,14 +120,14 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
         setpriceplanDate: client.setpriceplan_date && client.setpriceplan_date !== '0000-00-00' ? new Date(client.setpriceplan_date) : undefined,
         website: (() => {
-          // Demo: first client shows Phone, second shows Email
+          // Demo-only: force icon visibility on first row
           if (idx === 0) return 'Phone';
-          if (idx === 1) return 'Email';
-          const raw = client.client_website ?? client.website;
-          if (raw === 3) return 'Phone';
-          if (raw === 4) return 'Email';
-          if (raw === 1 || raw === 'BB') return 'BB';
-          if (raw === 2 || raw === 'BV') return 'BV';
+
+          const raw = client.client_website ?? client.website ?? client.client_source;
+          if (raw === 3 || raw === 'Phone') return 'Phone';
+          if (raw === 4 || raw === 'Email') return 'Email';
+          if (raw === 0 || raw === 'BB') return 'BB';
+          if (raw === 1 || raw === 'BV') return 'BV';
           if (['BB', 'BV', 'Phone', 'Email'].includes(raw)) return raw;
           return undefined;
         })(),
