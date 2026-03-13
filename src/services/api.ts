@@ -88,9 +88,6 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         return tmp.textContent || tmp.innerText || '';
       };
 
-      // Temporary: assign BB/BiSt to first two clients for design preview until API provides the field
-      const websiteFromApi = client.website === 'BB' ? 'BB' : client.website === 'BiSt' ? 'BiSt' : undefined;
-      const websitePreview: 'BB' | 'BiSt' | undefined = websiteFromApi ?? (index === 0 ? 'BB' : index === 1 ? 'BiSt' : undefined);
 
       return {
         id: String(client.client_id || client.id || ''),
