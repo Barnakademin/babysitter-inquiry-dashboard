@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy, History } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronRight, Users, MapPin, Mail, Phone, Wrench, Trash2, Copy, History, AtSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
