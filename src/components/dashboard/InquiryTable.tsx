@@ -226,12 +226,12 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                   <TableCell>
                     {(() => {
                       // TODO: remove demo fallback once API provides website field
-                      const site = inquiry.website ?? (index === 0 ? 'BB' : index === 1 ? 'BVSto' : undefined);
+                      const site = inquiry.website ?? (index === 0 ? 'BB' : index === 1 ? 'BV' : undefined);
                       return site ? (
                         <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
                           site === 'BB' 
                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' 
-                            : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                            : 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400'
                         }`}>
                           {site}
                         </span>
