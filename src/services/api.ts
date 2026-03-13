@@ -120,11 +120,8 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
         setpriceplanDate: client.setpriceplan_date && client.setpriceplan_date !== '0000-00-00' ? new Date(client.setpriceplan_date) : undefined,
         website: (() => {
-          // Demo: force first 4 rows to show all source types
+          // Demo-only: keep first row as Phone
           if (idx === 0) return 'Phone';
-          if (idx === 1) return 'BV';
-          if (idx === 2) return 'BB';
-          if (idx === 3) return 'Email';
 
           const raw = client.client_website ?? client.website ?? client.client_source;
           if (raw === 3 || raw === 'Phone') return 'Phone';
