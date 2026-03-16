@@ -228,15 +228,27 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
                     {(() => {
                       const site = inquiry.website;
                       if (!site) return <span className="text-muted-foreground text-xs">—</span>;
-                      if (site === 'Phone') return <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />;
-                      if (site === 'Email') return <AtSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />;
+                      if (site === 'Phone') return (
+                        <span className="inline-flex items-center gap-1.5" title="By phone (id 3)">
+                          <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />
+                        </span>
+                      );
+                      if (site === 'Email') return (
+                        <span className="inline-flex items-center gap-1.5" title="By email (id 4)">
+                          <AtSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                        </span>
+                      );
+                      const label = site === 'BB' ? 'BB' : 'BV';
                       return (
-                        <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
-                          site === 'BB' 
-                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' 
-                            : 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                        }`}>
-                          {site}
+                        <span
+                          className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold ${
+                            site === 'BB'
+                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                          }`}
+                          title={site === 'BB' ? 'id 1' : 'id 0'}
+                        >
+                          {label}
                         </span>
                       );
                     })()}

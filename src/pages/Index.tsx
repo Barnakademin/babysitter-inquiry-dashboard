@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
-import { ClientInquiry, mockInquiries } from "@/data/mockInquiries";
+import { useQuery } from "@tanstack/react-query";
+import { ClientInquiry } from "@/data/mockInquiries";
+import { fetchClientsFull } from "@/services/api";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { SearchBar } from "@/components/dashboard/SearchBar";
 import { FilterBar } from "@/components/dashboard/FilterBar";
@@ -7,13 +9,16 @@ import { InquiryTable } from "@/components/dashboard/InquiryTable";
 import { Pagination } from "@/components/dashboard/Pagination";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Loader2, AlertCircle } from "lucide-react";
 const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
 const Index = () => {
-  const inquiries: ClientInquiry[] = mockInquiries;
+  const { data: inquiries = [], isLoading, isError, error } = useQuery({
+    queryKey: ["clients-full"],
+    queryFn: fetchClientsFull,
+  });
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
@@ -119,6 +124,29 @@ const Index = () => {
     currentPage * ITEMS_PER_PAGE
   );
 
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
+          <p className="text-muted-foreground">Loading clients...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 max-w-md text-center">
+          <AlertCircle className="h-10 w-10 text-destructive" />
+          <p className="text-destructive font-medium">Failed to load clients</p>
+          <p className="text-muted-foreground text-sm">{error instanceof Error ? error.message : "Unknown error"}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

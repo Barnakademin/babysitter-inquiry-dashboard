@@ -65,6 +65,17 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
       return [];
     }
 
+    /** Map backend client_source (id 0,1,3,4 or string) to BB | BV | Phone | Email */
+    const mapClientSource = (raw: unknown): ClientInquiry['website'] | undefined => {
+      if (raw === undefined || raw === null || raw === '') return undefined;
+      const v = String(raw).trim().toLowerCase();
+      if (v === '0' || v === 'barnvaktistockholm.se' || v === 'bv') return 'BV';
+      if (v === '1' || v === 'bilingualbabysitters.se' || v === 'bilingualbabysiters.se' || v === 'bb') return 'BB';
+      if (v === '3' || v === 'by phone' || v === 'phone') return 'Phone';
+      if (v === '4' || v === 'by email' || v === 'email') return 'Email';
+      return undefined;
+    };
+
     return data.map((client: any) => {
       const languages = Array.isArray(client.language) 
         ? client.language.map((lang: any) => lang.name || '').filter(Boolean)
@@ -120,7 +131,7 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         everReachedStage7: client.ever_reached_stage_7 === true || client.ever_reached_stage_7 === 1 ? true : undefined,
         firstStage7Date: client.first_stage_7_date && client.first_stage_7_date !== '0000-00-00' ? new Date(client.first_stage_7_date) : undefined,
         setpriceplanDate: client.setpriceplan_date && client.setpriceplan_date !== '0000-00-00' ? new Date(client.setpriceplan_date) : undefined,
-        website: (client.client_website ?? client.website ?? client.client_source) as ClientInquiry['website'],
+        website: mapClientSource(client.client_website ?? client.website ?? client.client_source),
         breezy: client.breezy && String(client.breezy).trim() ? String(client.breezy).trim() : undefined,
       };
     });
