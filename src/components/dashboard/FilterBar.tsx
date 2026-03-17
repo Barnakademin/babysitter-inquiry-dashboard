@@ -15,6 +15,7 @@ interface FilterBarProps {
     service: string;
     language: string;
     year: string;
+    source: string;
   };
   onFilterChange: (key: string, value: string) => void;
   onClearFilters: () => void;
