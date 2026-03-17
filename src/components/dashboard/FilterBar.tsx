@@ -95,6 +95,19 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguage
         </SelectContent>
       </Select>
 
+      <Select value={filters.source} onValueChange={(v) => onFilterChange("source", v)}>
+        <SelectTrigger className="w-[140px] bg-card">
+          <SelectValue placeholder="All Sources" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Sources</SelectItem>
+          <SelectItem value="BB">BB</SelectItem>
+          <SelectItem value="BV">BV</SelectItem>
+          <SelectItem value="Phone">Phone</SelectItem>
+          <SelectItem value="Email">Email</SelectItem>
+        </SelectContent>
+      </Select>
+
       {hasActiveFilters && (
         <Button
           variant="ghost"

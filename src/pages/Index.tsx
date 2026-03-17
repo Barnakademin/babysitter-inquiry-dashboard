@@ -88,6 +88,9 @@ const Index = () => {
     if (filters.year) {
       result = result.filter((inquiry) => inquiry.createdAt.getFullYear().toString() === filters.year);
     }
+    if (filters.source) {
+      result = result.filter((inquiry) => inquiry.website === filters.source);
+    }
 
     // Sort
     if (sortConfig) {
