@@ -30,7 +30,7 @@ const serviceLabels: Record<string, string> = {
 };
 
 export function FilterBar({ filters, onFilterChange, onClearFilters, allLanguages, allCities, allYears }: FilterBarProps) {
-  const hasActiveFilters = filters.city || filters.service || filters.language || filters.year;
+  const hasActiveFilters = filters.city || filters.service || filters.language || filters.year || filters.source;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
