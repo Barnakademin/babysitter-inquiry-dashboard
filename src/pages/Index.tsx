@@ -50,6 +50,8 @@ const Index = () => {
 
   const clearFilters = () => {
     setFilters({ city: "", service: "", language: "", year: "", source: "" });
+    setCurrentPage(1);
+  };
 
   const handleSort = (key: string) => {
     setSortConfig((prev) => {
