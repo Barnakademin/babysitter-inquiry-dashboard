@@ -26,6 +26,7 @@ const Index = () => {
     service: "",
     language: "",
     year: "",
+    source: "",
   });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "createdAt", direction: "desc" });
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,7 +49,7 @@ const Index = () => {
   };
 
   const clearFilters = () => {
-    setFilters({ city: "", service: "", language: "", year: "" });
+    setFilters({ city: "", service: "", language: "", year: "", source: "" });
     setCurrentPage(1);
   };
 
@@ -88,6 +89,9 @@ const Index = () => {
     }
     if (filters.year) {
       result = result.filter((inquiry) => inquiry.createdAt.getFullYear().toString() === filters.year);
+    }
+    if (filters.source) {
+      result = result.filter((inquiry) => inquiry.website === filters.source);
     }
 
     // Sort
