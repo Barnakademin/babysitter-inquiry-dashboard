@@ -49,9 +49,7 @@ const Index = () => {
   };
 
   const clearFilters = () => {
-    setFilters({ city: "", service: "", language: "", year: "" });
-    setCurrentPage(1);
-  };
+    setFilters({ city: "", service: "", language: "", year: "", source: "" });
 
   const handleSort = (key: string) => {
     setSortConfig((prev) => {
