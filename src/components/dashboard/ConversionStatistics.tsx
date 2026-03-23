@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { ClientInquiry } from "@/data/mockInquiries";
 import {
   calculateConversionStats,
+  getConversionStatus,
+  getDaysToConvert,
   getBreakdownByCity,
   getBreakdownByLanguage,
   getBreakdownByNumberOfKids,
@@ -16,6 +18,8 @@ import {
 import { StatCard } from "./StatCard";
 import { BreakdownTable } from "./BreakdownTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -70,6 +74,9 @@ function renderSourceLabel(label: string) {
 export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const [selectedMonth, setSelectedMonth] = useState<string>(`year-${new Date().getFullYear()}`);
   const [isOpen, setIsOpen] = useState(true);
+  const [activeMetricModal, setActiveMetricModal] = useState<
+    "total" | "converted" | "not_converted" | "in_progress" | "conversion_rate" | "avg_days" | null
+  >(null);
 
   // All yearly stats for the period selector dropdown
   const allYearlyStats = useMemo(() => getYearlyStats(inquiries), [inquiries]);
@@ -121,6 +128,87 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
   const notConvertedRate = stats.total > 0 
     ? Math.round((stats.notConverted / stats.total) * 100) 
     : 0;
+
+  const allClientsForModal = useMemo(() => {
+    return filteredInquiries
+      .map((inquiry) => {
+        const status = getConversionStatus(inquiry);
+        const conversionDate = inquiry.setpriceplanDate
+          ?? (inquiry.stage === 7 ? inquiry.stageDate : inquiry.firstStage7Date ?? null);
+        const daysToConvert = getDaysToConvert(inquiry);
+
+        const statusLabel =
+          status === "converted"
+            ? "Converted"
+            : status === "not_converted"
+            ? "Not Converted"
+            : "In Progress";
+
+        return {
+          id: inquiry.id,
+          name: inquiry.name || "Unknown",
+          city: inquiry.city || "—",
+          source: inquiry.website || "—",
+          stage: inquiry.stage,
+          status,
+          statusLabel,
+          daysToConvert,
+          conversionDate: conversionDate
+            ? conversionDate.toLocaleDateString("sv-SE")
+            : "—",
+        };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [filteredInquiries]);
+
+  const metricModalConfig = useMemo(() => {
+    if (!activeMetricModal) return null;
+
+    switch (activeMetricModal) {
+      case "total":
+        return {
+          title: `Total Inquiries (${allClientsForModal.length})`,
+          rows: allClientsForModal,
+        };
+      case "converted": {
+        const rows = allClientsForModal.filter((c) => c.status === "converted");
+        return {
+          title: `Converted Clients (${rows.length})`,
+          rows,
+        };
+      }
+      case "not_converted": {
+        const rows = allClientsForModal.filter((c) => c.status === "not_converted");
+        return {
+          title: `Not Converted Clients (${rows.length})`,
+          rows,
+        };
+      }
+      case "in_progress": {
+        const rows = allClientsForModal.filter((c) => c.status === "in_progress");
+        return {
+          title: `In Progress Clients (${rows.length})`,
+          rows,
+        };
+      }
+      case "conversion_rate":
+        return {
+          title: `Conversion Rate Details (${allClientsForModal.length})`,
+          rows: allClientsForModal,
+        };
+      case "avg_days": {
+        const rows = allClientsForModal
+          .filter((c) => c.status === "converted")
+          .sort((a, b) => (a.daysToConvert ?? Number.MAX_SAFE_INTEGER) - (b.daysToConvert ?? Number.MAX_SAFE_INTEGER));
+        return {
+          title: `Avg Days to Convert Details (${rows.length})`,
+          rows,
+        };
+      }
+      default:
+        return null;
+    }
+  }, [activeMetricModal, allClientsForModal]);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -191,6 +279,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 title="Total Inquiries"
                 value={stats.total}
                 icon={<Users className="w-5 h-5" />}
+                onClick={() => setActiveMetricModal("total")}
               />
               <StatCard
                 title="Converted"
@@ -198,6 +287,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 subtitle={`Stage 7`}
                 icon={<UserCheck className="w-5 h-5" />}
                 valueClassName="text-green-600 dark:text-green-400"
+                onClick={() => setActiveMetricModal("converted")}
               />
               <StatCard
                 title="Not Converted"
@@ -205,6 +295,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 subtitle={`${notConvertedRate}% of total`}
                 icon={<UserX className="w-5 h-5" />}
                 valueClassName="text-red-600 dark:text-red-400"
+                onClick={() => setActiveMetricModal("not_converted")}
               />
               <StatCard
                 title="In Progress"
@@ -212,6 +303,7 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                 subtitle="Stage 1-6"
                 icon={<Hourglass className="w-5 h-5" />}
                 valueClassName="text-amber-600 dark:text-amber-400"
+                onClick={() => setActiveMetricModal("in_progress")}
               />
               <StatCard
                 title="Conversion Rate"
@@ -222,12 +314,14 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
                   stats.conversionRate >= 25 ? "text-amber-600 dark:text-amber-400" : 
                   "text-red-600 dark:text-red-400"
                 }
+                onClick={() => setActiveMetricModal("conversion_rate")}
               />
               <StatCard
                 title="Avg Days to Convert"
                 value={stats.avgDaysToConvert !== null ? stats.avgDaysToConvert : "—"}
                 subtitle={stats.medianDaysToConvert !== null ? `Median: ${stats.medianDaysToConvert}d` : undefined}
                 icon={<Clock className="w-5 h-5" />}
+                onClick={() => setActiveMetricModal("avg_days")}
               />
             </div>
 
@@ -339,6 +433,50 @@ export function ConversionStatistics({ inquiries }: ConversionStatisticsProps) {
           </CardContent>
         </CollapsibleContent>
       </Card>
+
+      <Dialog open={activeMetricModal !== null} onOpenChange={(open) => !open && setActiveMetricModal(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{metricModalConfig?.title ?? "Client Details"}</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto">
+            {metricModalConfig && metricModalConfig.rows.length > 0 ? (
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Client</TableHead>
+                      <TableHead>City</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Stage</TableHead>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Conversion Date</TableHead>
+                      <TableHead>Days to Convert</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {metricModalConfig.rows.map((client) => (
+                      <TableRow key={client.id}>
+                        <TableCell className="font-medium">{client.name}</TableCell>
+                        <TableCell>{client.city}</TableCell>
+                        <TableCell>{client.statusLabel}</TableCell>
+                        <TableCell>{client.stage}</TableCell>
+                        <TableCell>{client.source}</TableCell>
+                        <TableCell>{client.conversionDate}</TableCell>
+                        <TableCell>{client.daysToConvert ?? "—"}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                No clients found in selected period
+              </p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Collapsible>
   );
 }

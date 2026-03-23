@@ -2,9 +2,10 @@ import { Baby, Users } from "lucide-react";
 
 interface DashboardHeaderProps {
   totalInquiries: number;
+  onTotalInquiriesClick?: () => void;
 }
 
-export function DashboardHeader({ totalInquiries }: DashboardHeaderProps) {
+export function DashboardHeader({ totalInquiries, onTotalInquiriesClick }: DashboardHeaderProps) {
   return (
     <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div className="flex items-center gap-3">
@@ -17,11 +18,15 @@ export function DashboardHeader({ totalInquiries }: DashboardHeaderProps) {
         </div>
       </div>
       
-      <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border shadow-card">
+      <button
+        type="button"
+        onClick={onTotalInquiriesClick}
+        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border shadow-card transition-colors hover:border-primary/40"
+      >
         <Users className="w-4 h-4 text-muted-foreground" />
         <span className="text-sm text-muted-foreground">Total Inquiries:</span>
         <span className="font-bold text-foreground">{totalInquiries}</span>
-      </div>
+      </button>
     </header>
   );
 }

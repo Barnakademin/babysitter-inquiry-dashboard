@@ -10,6 +10,8 @@ import { Pagination } from "@/components/dashboard/Pagination";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BarChart3, Loader2, AlertCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 const ITEMS_PER_PAGE = 100;
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
@@ -30,6 +32,7 @@ const Index = () => {
   });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "createdAt", direction: "desc" });
   const [currentPage, setCurrentPage] = useState(1);
+  const [isTotalInquiriesModalOpen, setIsTotalInquiriesModalOpen] = useState(false);
 
   const allLanguages = useMemo(() => {
     return [...new Set(inquiries.flatMap((i) => i.languages))].sort();
@@ -121,6 +124,17 @@ const Index = () => {
     return result;
   }, [inquiries, searchQuery, filters, sortConfig]);
 
+  const totalInquiriesModalData = useMemo(() => {
+    return filteredAndSortedData.map((inquiry) => ({
+      id: inquiry.id,
+      name: inquiry.name || "Unknown",
+      email: inquiry.email || "—",
+      city: inquiry.city || "—",
+      stage: inquiry.stage,
+      source: inquiry.website || "—",
+    }));
+  }, [filteredAndSortedData]);
+
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedData.length / ITEMS_PER_PAGE);
   const paginatedData = filteredAndSortedData.slice(
@@ -155,7 +169,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="px-6 py-8 space-y-6">
-        <DashboardHeader totalInquiries={inquiries.length} />
+        <DashboardHeader
+          totalInquiries={inquiries.length}
+          onTotalInquiriesClick={() => setIsTotalInquiriesModalOpen(true)}
+        />
 
         <Button variant="outline" asChild className="gap-2">
           <Link to="/statistics">
@@ -208,6 +225,44 @@ const Index = () => {
           </>
         )}
       </div>
+
+      <Dialog open={isTotalInquiriesModalOpen} onOpenChange={setIsTotalInquiriesModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Clients by Total Inquiries ({totalInquiriesModalData.length})</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto">
+            {totalInquiriesModalData.length > 0 ? (
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>City</TableHead>
+                      <TableHead>Stage</TableHead>
+                      <TableHead>Source</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {totalInquiriesModalData.map((client) => (
+                      <TableRow key={client.id}>
+                        <TableCell className="font-medium">{client.name}</TableCell>
+                        <TableCell>{client.email}</TableCell>
+                        <TableCell>{client.city}</TableCell>
+                        <TableCell>{client.stage}</TableCell>
+                        <TableCell>{client.source}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">No clients found</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
