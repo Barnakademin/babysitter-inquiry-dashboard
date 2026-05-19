@@ -116,11 +116,22 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         formLanguage: client.client_client_lang === 1 ? 'en' : 'sv',
         promoCode: client.promo_code || null,
         comment: stripHtml(client.client_form_comment || client.client_notes || ''),
-        stage: Number(
-          client.client_stage_ui !== undefined && client.client_stage_ui !== null
-            ? client.client_stage_ui
-            : (client.client_stage != null ? (client.client_stage as number) - 1 : 0)
-        ) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+        stage: (() => {
+          const additional = Array.isArray(client.additional_stages)
+            ? client.additional_stages.map((s: unknown) => Number(s)).filter((n: number) => !Number.isNaN(n))
+            : [];
+          const fromApi =
+            client.client_stage_ui !== undefined && client.client_stage_ui !== null
+              ? Number(client.client_stage_ui)
+              : client.client_stage != null
+                ? Number(client.client_stage) - 1
+                : 0;
+          // Primary DB stage 8 = UI stage 7 with optional additional-stage-select
+          if (Number(client.client_stage) === 8 && additional.length > 0) {
+            return additional[0];
+          }
+          return fromApi;
+        })() as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
         stageDate: client.client_added_stage && client.client_added_stage !== '0000-00-00' 
           ? new Date(client.client_added_stage) 
           : (client.client_added ? new Date(parseDateTime(client.client_added)) : new Date()),
