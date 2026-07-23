@@ -113,7 +113,8 @@ export const fetchClientsFull = async (): Promise<ClientInquiry[]> => {
         needHelpWith: helpTitles.join(', '),
         howOften: client.schedule?.title || '',
         numberOfKids: Array.isArray(client.children) ? client.children.length : 0,
-        formLanguage: client.client_client_lang === 1 ? 'en' : 'sv',
+        // Convention (add/edit forms): 0 = En, 1 = Sw
+        formLanguage: client.client_client_lang === 0 ? 'en' : 'sv',
         promoCode: client.promo_code || null,
         comment: stripHtml(client.client_form_comment || client.client_notes || ''),
         stage: (() => {
