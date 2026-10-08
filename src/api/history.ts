@@ -26,9 +26,12 @@ export type ConnectionItem = {
   stop_date?: string;
 };
 
-export const fetchHistory = async (): Promise<HistoryItem[]> => {
+export const fetchHistory = async (clientId?: number): Promise<HistoryItem[]> => {
   const API_BASE_URL = getApiBaseUrlStatic();
-  const response = await fetch(`${API_BASE_URL}/get-history`);
+  const qs = clientId != null && Number.isFinite(clientId)
+    ? `?getClient=${encodeURIComponent(String(clientId))}`
+    : '';
+  const response = await fetch(`${API_BASE_URL}/get-history${qs}`);
   if (!response.ok) {
     throw new Error('Failed to fetch history');
   }

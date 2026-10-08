@@ -16,6 +16,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  firstValidMatchingDate,
+  formatMatchingDateOnly,
+  isInvalidMatchingDate,
+} from "@/utils/matchingDates";
+import { dedupeHistoryRows } from "@/utils/dedupeHistoryRows";
 
 type ClientHistoryViewProps = {
   clientId: number;
@@ -37,283 +43,239 @@ const getStage = (stage: string, meeting: string) => {
   if (stage === '3') return '3';
   if (stage === '45') return '6';
   if (stage === '4') {
-    return meeting ? '5' : '4';
+    return !isInvalidMatchingDate(meeting) ? '5' : '4';
   }
   return '';
 };
 
-/** Logs stage 9000–9999 are MatchingSitterTransitionLogger diagnostics, not pipeline history. */
 const isPipelineHistoryStage = (stage: string | number) => {
   const n = Number(stage);
   return !Number.isFinite(n) || n < 9000 || n >= 10000;
 };
 
+const connectingDateFor = (
+  connections: ConnectionItem[],
+  clientId: number,
+  sitterId: number,
+  fallbackDate: string,
+) => {
+  const connectingData = connections.find(
+    (conn) => +conn.sitter_id === +sitterId && +conn.client_id === +clientId,
+  );
+  return firstValidMatchingDate(connectingData?.connecting, fallbackDate);
+};
+
 export function ClientHistoryView({ clientId, history, connections = [], showClientName = false }: ClientHistoryViewProps) {
   const [stageFilter, setStageFilter] = useState<string>('all');
 
-  const clientHistory = history
-      .filter(h => h.client_id.toString() === clientId.toString())
-      .filter(h => isPipelineHistoryStage(h.stage))
-      .sort((a, b) => b.id - a.id);
+  const clientHistory = dedupeHistoryRows(
+    history
+      .filter((h) => h.client_id.toString() === clientId.toString())
+      .filter((h) => isPipelineHistoryStage(h.stage)),
+  ).sort((a, b) => b.id - a.id);
 
-  const filteredHistory = clientHistory.filter(h => {
+  const filteredHistory = clientHistory.filter((h) => {
     if (stageFilter === 'all') return true;
-    const stage = getStage(h.stage, h.meeting);
-    return stage === stageFilter;
+    return getStage(h.stage, h.meeting) === stageFilter;
   });
 
-  const formatDate = (dateStr: string) => {
-    if (!dateStr || dateStr === '0000-00-00' || dateStr === '0000-00-00 00:00:00') return '';
-    if (dateStr.startsWith('1000-01-01') || dateStr.startsWith('1970-01-01')) return '';
-    return dateStr.split(' ')[0];
-  };
-
   return (
-      <div className="space-y-3">
-        {/* Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">Stage:</span>
-          <Select value={stageFilter} onValueChange={setStageFilter}>
-            <SelectTrigger className="w-32 h-8">
-              <SelectValue placeholder="All" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="2">I-II</SelectItem>
-              <SelectItem value="3">III</SelectItem>
-              <SelectItem value="4">IV</SelectItem>
-              <SelectItem value="5">V</SelectItem>
-              <SelectItem value="6">VI</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium">Stage:</span>
+        <Select value={stageFilter} onValueChange={setStageFilter}>
+          <SelectTrigger className="w-32 h-8">
+            <SelectValue placeholder="All" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="2">I-II</SelectItem>
+            <SelectItem value="3">III</SelectItem>
+            <SelectItem value="4">IV</SelectItem>
+            <SelectItem value="5">V</SelectItem>
+            <SelectItem value="6">VI</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-        {/* History Items */}
-        <div className="space-y-2">
-          {filteredHistory.length > 0 ? (
-              filteredHistory.map((h) => {
-                const stageNumber = getStage(h.stage, h.meeting);
+      <div className="space-y-2">
+        {filteredHistory.length > 0 ? (
+          filteredHistory.map((h) => {
+            const stage = String(h.stage);
+            const hasMeeting = !isInvalidMatchingDate(h.meeting);
 
-                let mainDate = '';
-                if (h.stage === '2') {
-                  mainDate = h.asked_client ? formatDate(h.asked_client) : formatDate(h.date || h.sitter_stage_two);
-                } else if (h.stage === '3') {
-                  mainDate = h.date_client && h.date_client !== '0000-00-00' ? formatDate(h.date) : '';
-                } else if (h.stage === '4' && h.meeting) {
-                  mainDate = formatDate(h.meeting);
-                } else if (h.stage === '4') {
-                  mainDate = h.date_client && h.date_client !== '0000-00-00' ? formatDate(h.date) : '';
-                } else if (h.stage === '45') {
-                  const connectingData = connections.find(
-                      conn => +conn.sitter_id === +h.sitter_id && +conn.client_id === +clientId
-                  );
-                  mainDate = connectingData?.connecting && connectingData.connecting !== '0000-00-00'
-                      ? formatDate(connectingData.connecting)
-                      : (h.date ? formatDate(h.date) : '');
-                } else if (h.stage === '6') {
-                  const connectingData = connections.find(
-                      conn => +conn.sitter_id === +h.sitter_id && +conn.client_id === +clientId
-                  );
-                  mainDate = connectingData?.connecting && connectingData.connecting !== '0000-00-00'
-                      ? formatDate(connectingData.connecting)
-                      : (h.date ? formatDate(h.date) : '');
-                }
+            // Align with Matching History.jsx (+ stage 2 prefers event/log date, not later asked_client).
+            let mainDate = '';
+            if (stage === '2') {
+              mainDate = firstValidMatchingDate(h.date, h.sitter_stage_two, h.asked_client);
+            } else if (stage === '3') {
+              mainDate = firstValidMatchingDate(h.asked_client, h.date, h.sitter_stage_two);
+            } else if (stage === '4') {
+              mainDate = hasMeeting
+                ? firstValidMatchingDate(h.meeting, h.date)
+                : firstValidMatchingDate(h.date_client, h.date, h.asked_client);
+            } else if (stage === '45' || stage === '5') {
+              mainDate = firstValidMatchingDate(h.meeting, h.date);
+            } else if (stage === '6' || stage === '7') {
+              mainDate = connectingDateFor(connections, clientId, h.sitter_id, h.date);
+            }
 
-                const reminderDate = formatDate(h.reminder);
+            const reminderDate = formatMatchingDateOnly(h.reminder);
+            const eventDate = formatMatchingDateOnly(h.date);
+            const askedDate = formatMatchingDateOnly(h.asked_client);
 
-                return (
-                    <div
-                        key={h.id}
-                        className="grid grid-cols-[auto,auto,1fr,auto] gap-3 items-start p-3 rounded-lg border bg-card hover:bg-accent/5 transition-colors"
-                    >
-                      {/* Date Column */}
-                      <div className="flex flex-col gap-1 min-w-[90px]">
-                        {h.stage === '2' && (
-                            <>
-                              <div className="text-sm font-medium">{mainDate}</div>
-                              {reminderDate && (
-                                  <div className="text-sm text-red-600 font-medium">
-                                    ({reminderDate})
-                                  </div>
-                              )}
-                            </>
-                        )}
+            return (
+              <div
+                key={`${h.id}-${h.sitter_id}-${stage}`}
+                className="grid grid-cols-[auto,auto,1fr,auto] gap-3 items-start p-3 rounded-lg border bg-card hover:bg-accent/5 transition-colors"
+              >
+                <div className="flex flex-col gap-1 min-w-[90px]">
+                  {mainDate ? (
+                    <div className="text-sm font-medium">{mainDate}</div>
+                  ) : null}
+                  {stage === '2' && reminderDate ? (
+                    <div className="text-sm text-red-600 font-medium">({reminderDate})</div>
+                  ) : null}
+                </div>
 
-                        {h.stage === '3' && h.date_client && (
-                            <div className="text-sm font-medium">{formatDate(h.date)}</div>
-                        )}
-
-                        {h.stage === '4' && h.meeting && (
-                            <div className="text-sm font-medium">{formatDate(h.meeting)}</div>
-                        )}
-
-                        {h.stage === '4' && !h.meeting && h.date_client && (
-                            <div className="text-sm font-medium">{formatDate(h.date)}</div>
-                        )}
-
-                        {h.stage === '45' && (() => {
-                          const connectingData = connections.find(
-                              conn => +conn.sitter_id === +h.sitter_id && +conn.client_id === +clientId
-                          );
-                          const connectingDate = connectingData?.connecting && connectingData.connecting !== '0000-00-00'
-                              ? formatDate(connectingData.connecting)
-                              : (h.date ? formatDate(h.date) : '');
-                          return connectingDate ? (
-                              <div className="text-sm font-medium">{connectingDate}</div>
-                          ) : null;
-                        })()}
+                <div className="flex flex-col items-center gap-1 min-w-[60px]">
+                  {stage === '2' && (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <Badge variant="outline" className="text-xs">I-II</Badge>
+                        <ArrowLeft className={cn("h-4 w-4", getStatusColor(h.status_sitter))} />
                       </div>
+                      {reminderDate ? (
+                        <Badge variant="outline" className="text-xs text-red-600 border-red-300 bg-red-50">
+                          II-R
+                        </Badge>
+                      ) : null}
+                    </>
+                  )}
 
-                      {/* Stage Badge with Icon */}
-                      <div className="flex flex-col items-center gap-1 min-w-[60px]">
-                        {h.stage === '2' && (
-                            <>
-                              <div className="flex items-center gap-1">
-                                <Badge variant="outline" className="text-xs">I-II</Badge>
-                                <ArrowLeft className={cn("h-4 w-4", getStatusColor(h.status_sitter))} />
-                              </div>
-                              {h.reminder && (
-                                  <Badge variant="outline" className="text-xs text-red-600 border-red-300 bg-red-50">
-                                    II-R
-                                  </Badge>
-                              )}
-                            </>
-                        )}
+                  {stage === '3' && (
+                    <div className="flex items-center gap-1">
+                      <Badge variant="outline" className="text-xs">III</Badge>
+                      <ArrowRight className={cn("h-4 w-4", getStatusColor(h.status_client))} />
+                    </div>
+                  )}
 
-                        {h.stage === '3' && (
-                            <div className="flex items-center gap-1">
-                              <Badge variant="outline" className="text-xs">III</Badge>
-                              <ArrowRight className={cn("h-4 w-4", getStatusColor(h.status_client))} />
-                            </div>
-                        )}
+                  {stage === '4' && hasMeeting && (
+                    <div className="flex items-center gap-1">
+                      <Badge variant="outline" className="text-xs">V</Badge>
+                      <CalendarDays className="h-4 w-4 text-green-600" />
+                    </div>
+                  )}
 
-                        {h.stage === '4' && h.meeting && (
-                            <div className="flex items-center gap-1">
-                              <Badge variant="outline" className="text-xs">V</Badge>
-                              <CalendarDays className="h-4 w-4 text-green-600" />
-                            </div>
-                        )}
+                  {stage === '4' && !hasMeeting && (
+                    <div className="flex items-center gap-1">
+                      <Badge variant="outline" className="text-xs">IV</Badge>
+                      <ArrowLeftRight className="h-4 w-4" />
+                    </div>
+                  )}
 
-                        {h.stage === '4' && !h.meeting && (
-                            <div className="flex items-center gap-1">
-                              <Badge variant="outline" className="text-xs">IV</Badge>
-                              <ArrowLeftRight className="h-4 w-4" />
-                            </div>
-                        )}
+                  {(stage === '6' || stage === '7') && (
+                    <div className="flex items-center gap-1">
+                      <Badge variant="outline" className="text-xs">VI</Badge>
+                    </div>
+                  )}
 
-                        {h.stage === '6' && (
-                            <div className="flex items-center gap-1">
-                              <Badge variant="outline" className="text-xs">V</Badge>
-                              <CalendarDays className="h-4 w-4" />
-                            </div>
-                        )}
+                  {(stage === '45' || stage === '5') && (
+                    <div className="flex items-center gap-1">
+                      <Badge variant="outline" className="text-xs">V</Badge>
+                      <CalendarDays className="h-4 w-4 text-green-600" />
+                    </div>
+                  )}
+                </div>
 
-                        {h.stage === '45' && (
-                            <Badge variant="outline" className="text-xs">VI</Badge>
-                        )}
-                      </div>
-
-                      {/* Description Column */}
-                      <div className="flex flex-col gap-1">
-                        {h.stage === '2' && (
-                            <>
-                              <div className="text-sm">
-                                Ask about family:
-                                <span className={cn("ml-1 font-medium uppercase", getStatusColor(h.status_sitter))}>
+                <div className="flex flex-col gap-1">
+                  {stage === '2' && (
+                    <>
+                      <div className="text-sm">
+                        Ask about family:
+                        <span className={cn("ml-1 font-medium uppercase", getStatusColor(h.status_sitter))}>
                           {h.status_sitter}
                         </span>
-                              </div>
-                              {h.date && (
-                                  <div className={cn("text-xs", getStatusColor(h.status_sitter))}>
-                                    {formatDate(h.date)}
-                                  </div>
-                              )}
-                            </>
-                        )}
+                      </div>
+                      {eventDate && eventDate !== mainDate ? (
+                        <div className={cn("text-xs", getStatusColor(h.status_sitter))}>{eventDate}</div>
+                      ) : null}
+                    </>
+                  )}
 
-                        {h.stage === '3' && (
-                            <>
-                              <div className="text-sm">
-                                Client wants to meet?
-                                <span className={cn("ml-1 font-medium uppercase", getStatusColor(h.status_client))}>
+                  {stage === '3' && (
+                    <>
+                      <div className="text-sm">
+                        Client wants to meet?
+                        <span className={cn("ml-1 font-medium uppercase", getStatusColor(h.status_client))}>
                           {h.status_client}
                         </span>
-                              </div>
-                              {h.asked_client && (
-                                  <div className="text-xs text-muted-foreground">
-                                    {formatDate(h.asked_client)}
-                                  </div>
-                              )}
-                            </>
-                        )}
+                      </div>
+                      {askedDate && askedDate !== mainDate ? (
+                        <div className="text-xs text-muted-foreground">{askedDate}</div>
+                      ) : null}
+                    </>
+                  )}
 
-                        {h.stage === '4' && h.meeting && (
-                            <div className="text-sm">Schedule the meeting</div>
-                        )}
+                  {stage === '4' && hasMeeting && (
+                    <div className="text-sm">Schedule the meeting</div>
+                  )}
 
-                        {h.stage === '4' && !h.meeting && (
-                            <>
-                              <div className="text-sm">
-                                Client wants to meet?
-                                <span className={cn("ml-1 font-medium uppercase", getStatusColor(h.status_client))}>
+                  {stage === '4' && !hasMeeting && (
+                    <>
+                      <div className="text-sm">
+                        Client wants to meet?
+                        <span className={cn("ml-1 font-medium uppercase", getStatusColor(h.status_client))}>
                           {h.status_client}
                         </span>
-                              </div>
-                              {h.asked_client && (
-                                  <div className="text-xs text-muted-foreground">
-                                    {formatDate(h.asked_client)}
-                                  </div>
-                              )}
-                              {h.date && h.date !== '0000-00-00 00:00:00' && (
-                                  <div className="text-xs text-muted-foreground">
-                                    {formatDate(h.date)}
-                                  </div>
-                              )}
-                            </>
-                        )}
-
-                        {h.stage === '6' && (
-                            <div className="text-sm">Meeting scheduled</div>
-                        )}
-
-                        {h.stage === '45' && (
-                            <div className="text-sm">Contract sent</div>
-                        )}
                       </div>
+                      {mainDate ? (
+                        <div className="text-xs text-muted-foreground">{mainDate}</div>
+                      ) : null}
+                    </>
+                  )}
 
-                      {/* Name Column */}
-                      <div className="flex items-center gap-1">
-                        {showClientName ? (
-                          <a
-                              href={`/add/edit?id=${h.client_id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
-                          >
-                            {h.client_name || `Client ${h.client_id}`}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        ) : (
-                          <a
-                              href={`/sitter/edit?id=${h.sitter_id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
-                          >
-                            {h.sitter_name}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                );
-              })
-          ) : (
-              <div className="text-center text-sm text-muted-foreground py-8">
-                No history yet
+                  {(stage === '45' || stage === '5') && (
+                    <div className="text-sm">Schedule the meeting</div>
+                  )}
+
+                  {(stage === '6' || stage === '7') && (
+                    <div className="text-sm">Contract sent</div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1">
+                  {showClientName ? (
+                    <a
+                      href={`/add/edit?id=${h.client_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      {h.client_name || `Client ${h.client_id}`}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : (
+                    <a
+                      href={`/sitter/edit?id=${h.sitter_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      {h.sitter_name}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  )}
+                </div>
               </div>
-          )}
-        </div>
+            );
+          })
+        ) : (
+          <div className="text-center text-sm text-muted-foreground py-8">
+            No history yet
+          </div>
+        )}
       </div>
+    </div>
   );
 }

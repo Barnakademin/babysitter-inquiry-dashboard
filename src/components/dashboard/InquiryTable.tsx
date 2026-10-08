@@ -89,14 +89,18 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
   const [historyClient, setHistoryClient] = useState<ClientInquiry | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: historyData = [] } = useQuery({
-    queryKey: ['history'],
-    queryFn: fetchHistory
+  const historyClientId = historyClient ? parseInt(historyClient.id, 10) : null;
+
+  const { data: historyData = [], isFetching: historyLoading } = useQuery({
+    queryKey: ['history', historyClientId],
+    queryFn: () => fetchHistory(historyClientId!),
+    enabled: historyClientId != null && Number.isFinite(historyClientId),
   });
 
   const { data: connectionsData = [] } = useQuery({
     queryKey: ['connections'],
-    queryFn: fetchConnections
+    queryFn: fetchConnections,
+    enabled: historyClientId != null,
   });
 
   const toggleRow = (id: string) => {
@@ -403,11 +407,15 @@ export function InquiryTable({ data, sortConfig, onSort, currentPage = 1, itemsP
           </DialogHeader>
           <div className="py-4">
             {historyClient && (
-              <ClientHistoryView
-                clientId={parseInt(historyClient.id)}
-                history={historyData}
-                connections={connectionsData}
-              />
+              historyLoading ? (
+                <div className="text-sm text-muted-foreground py-8 text-center">Loading history…</div>
+              ) : (
+                <ClientHistoryView
+                  clientId={historyClientId!}
+                  history={historyData}
+                  connections={connectionsData}
+                />
+              )
             )}
           </div>
         </DialogContent>
