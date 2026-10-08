@@ -42,11 +42,18 @@ const getStage = (stage: string, meeting: string) => {
   return '';
 };
 
+/** Logs stage 9000–9999 are MatchingSitterTransitionLogger diagnostics, not pipeline history. */
+const isPipelineHistoryStage = (stage: string | number) => {
+  const n = Number(stage);
+  return !Number.isFinite(n) || n < 9000 || n >= 10000;
+};
+
 export function ClientHistoryView({ clientId, history, connections = [], showClientName = false }: ClientHistoryViewProps) {
   const [stageFilter, setStageFilter] = useState<string>('all');
 
   const clientHistory = history
       .filter(h => h.client_id.toString() === clientId.toString())
+      .filter(h => isPipelineHistoryStage(h.stage))
       .sort((a, b) => b.id - a.id);
 
   const filteredHistory = clientHistory.filter(h => {
@@ -56,7 +63,8 @@ export function ClientHistoryView({ clientId, history, connections = [], showCli
   });
 
   const formatDate = (dateStr: string) => {
-    if (!dateStr || dateStr === '0000-00-00 00:00:00') return '';
+    if (!dateStr || dateStr === '0000-00-00' || dateStr === '0000-00-00 00:00:00') return '';
+    if (dateStr.startsWith('1000-01-01') || dateStr.startsWith('1970-01-01')) return '';
     return dateStr.split(' ')[0];
   };
 
